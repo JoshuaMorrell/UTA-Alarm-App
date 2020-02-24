@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1068765988281",
+    "firebase_url": "https://uta-alarm.firebaseio.com",
+    "project_id": "uta-alarm",
+    "storage_bucket": "uta-alarm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1068765988281:android:680fd071b783b2aa5de268",
+        "android_client_info": {
+          "package_name": "com.example.utatracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1068765988281-11mva96thr4kq4pn9stc7q9k2nsb3bjo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.utatracker",
+            "certificate_hash": "31af6402f35365cbeccf53d6020adf7af1e32a9f"
+          }
+        },
+        {
+          "client_id": "1068765988281-i8mbbs0nas3suvcuck63puu99407mkhq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIdt1P2i1AEdCB2AORV0WVHrVy8OYAN-A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1068765988281-i8mbbs0nas3suvcuck63puu99407mkhq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
