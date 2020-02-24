@@ -35,7 +35,14 @@ public class HomeActivity extends AppCompatActivity {
 
             Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
             startActivity(intent);
+            finish();
         }
         return true;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        return;
     }
 }

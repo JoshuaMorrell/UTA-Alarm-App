@@ -73,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             startActivity(intent);
+                            finish();
                         }
                         else {
                             Toast.makeText(getApplicationContext(), "Login failed! Please try again.", Toast.LENGTH_LONG).show();
@@ -88,5 +89,10 @@ public class LoginActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.passwordField);
         loginBtn = findViewById(R.id.loginBtn);
         progressBar = findViewById(R.id.progressBar);
+    }
+
+    @Override
+    public void onBackPressed() {
+        return;
     }
 }
