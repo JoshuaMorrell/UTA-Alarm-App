@@ -1,5 +1,6 @@
 package com.example.utatracker;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -7,6 +8,7 @@ import android.text.TextUtils;
 import android.text.style.UnderlineSpan;
 import android.util.Patterns;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -50,13 +52,13 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginUser(false);
+                loginUser(false, v);
             }
         });
         googleLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginUser(true);
+                loginUser(true, v);
             }
         });
         registerBtn.setOnClickListener(new View.OnClickListener(){
@@ -87,12 +89,15 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void loginUser(boolean GoogleUser) {
+    private void loginUser(boolean GoogleUser, View v) {
         progressBar.setVisibility(View.VISIBLE);
         loginBtn.setEnabled(false);
         googleLoginBtn.setEnabled(false);
         registerBtn.setEnabled(false);
         forgotPasswordBtn.setEnabled(false);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        v.requestFocus();
 
         if (GoogleUser) {
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
@@ -114,15 +119,15 @@ public class LoginActivity extends AppCompatActivity {
             String password = passwordInput.getText().toString();
 
             if (TextUtils.isEmpty(email)) {
-                loginFailed("Please enter email...");
+                loginFailed("Please enter your email");
                 return;
             }
             else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-                loginFailed("Enter a valid email");
+                loginFailed("Enter a valid email address");
                 return;
             }
             else if (TextUtils.isEmpty(password)) {
-                loginFailed("Please enter password!");
+                loginFailed("Please enter your password!");
                 return;
             }
             else {

@@ -52,11 +52,11 @@ public class RegisterActivity extends Activity {
                 String password2Text = password2.getText().toString();
 
                 if (TextUtils.isEmpty(emailText)) {
-                    failedRegistration("Enter an email");
+                    failedRegistration("Enter your email address");
                     return;
                 }
                 else if (!Patterns.EMAIL_ADDRESS.matcher(emailText).matches()){
-                    failedRegistration("Enter a valid email");
+                    failedRegistration("Enter a valid email address");
                     return;
                 }
                 else if (TextUtils.isEmpty(passwordText)) {
