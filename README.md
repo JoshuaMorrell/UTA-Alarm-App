@@ -1,2 +1,2 @@
 # UTA-Alarm-App
-An Android utility that will track a UTA transit stop and notify the user when their transit option is nearing their location.
+An Android utility that will track a UTA transit stop and notify the user when their transit option is nearing their location. Notifications are based on the users alarm configurations, which determines when the user is to be notified and which alarms are active. This application integrates the UTA SIRI restful API as well as Firebase and GoogleMaps to bring real-time data straight to the hands of our users.
