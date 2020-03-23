@@ -82,9 +82,9 @@ public class LoginActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account);
+                existingUserGoogleSignIn(account);
             } catch (ApiException e) {
-                loginFailed("Google sign in failed, please try again.");
+                loginFailed(e.getMessage());
             }
         }
     }
@@ -102,16 +102,10 @@ public class LoginActivity extends AppCompatActivity {
         if (GoogleUser) {
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
             if(account != null){
-                firebaseAuthWithGoogle(account);
+                existingUserGoogleSignIn(account);
             }
             else {
-                GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(getString(R.string.default_web_client_id))
-                        .requestEmail()
-                        .build();
-                GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                startActivityForResult(signInIntent, RC_SIGN_IN);
+                newUserGoogleSignIn();
             }
         }
         else {
@@ -147,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+    private void existingUserGoogleSignIn(GoogleSignInAccount account) {
         try {
             AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
             mAuth.signInWithCredential(credential)
@@ -157,10 +151,25 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             loginSuccess();
                         } else {
-                            loginFailed("Authentication Failed.");
+                            newUserGoogleSignIn();
                         }
                     }
                 });
+        }
+        catch (Exception e) {
+            loginFailed(e.getMessage());
+        }
+    }
+
+    private void newUserGoogleSignIn() {
+        try {
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build();
+            GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            startActivityForResult(signInIntent, RC_SIGN_IN);
         }
         catch (Exception e) {
             loginFailed(e.getMessage());
