@@ -24,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginBtn;
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
+    private Button testAPI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,16 @@ public class LoginActivity extends AppCompatActivity {
                 loginUser();
             }
         });
+        testAPI.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v1){
+                Intent inter = new Intent(LoginActivity.this,NetworkActivity.class);
+                startActivity(inter);
+            }
+        });
         progressBar.setVisibility(View.INVISIBLE);
+
+
     }
 
     private void loginUser() {
@@ -88,5 +98,6 @@ public class LoginActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.passwordField);
         loginBtn = findViewById(R.id.loginBtn);
         progressBar = findViewById(R.id.progressBar);
+        testAPI = findViewById(R.id.testAPI);
     }
 }
