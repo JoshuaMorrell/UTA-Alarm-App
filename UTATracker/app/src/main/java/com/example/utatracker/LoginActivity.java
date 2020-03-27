@@ -55,6 +55,9 @@ public class LoginActivity extends AppCompatActivity {
                 loginUser(false, v);
             }
         });
+
+        progressBar.setVisibility(View.INVISIBLE);
+
         googleLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
