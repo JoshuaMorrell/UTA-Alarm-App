@@ -90,8 +90,8 @@ public class HomeActivity extends AppCompatActivity {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_timer_black_24dp)
-                .setContentTitle("Hello there")
-                .setContentText("Obi wan Kenobi")
+                .setContentTitle("UTA Tracker Alarm")
+                .setContentText(content)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         return builder.build();
     }
