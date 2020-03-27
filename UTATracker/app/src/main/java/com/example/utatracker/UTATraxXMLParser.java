@@ -2,8 +2,13 @@ package com.example.utatracker;
 import android.util.Xml;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,12 +16,12 @@ public class UTATraxXMLParser {
     // We don't use namespaces
     private static final String ns = null;
 
-    public static List parse(InputStream in) throws XmlPullParserException, IOException {
+    public static List<MonitoredVehicleByRoute> parse(BufferedInputStream in) throws XmlPullParserException, IOException {
         try {
-            XmlPullParser parser = Xml.newPullParser();
-            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(in, null);
-            parser.nextTag();
+            XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, true);
+            parser.setInput(in,null);
+
             return readFeed(parser);
         } finally {
             in.close();
@@ -35,46 +40,65 @@ public class UTATraxXMLParser {
      * @throws XmlPullParserException
      * @throws IOException
      */
-    private static List readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
-        List vehiclesByRoute = new ArrayList();
+    private static List<MonitoredVehicleByRoute> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
+        List<MonitoredVehicleByRoute> vehiclesByRoute = new ArrayList();
 
-        parser.require(XmlPullParser.START_TAG, ns, "feed");
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-            String name = parser.getName();
+        //TODO:Get following data for each Call for Validations
+        // ResponseTimestamp, ValidUntil RecordedAtTime
+        int eventType = parser.getEventType();
+        MonitoredVehicleByRoute v;
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+            String tagName = parser.getName();
+            /*
             // Starts by looking for MonitoredVehicleJourney Tag
             if (name.equals("MonitoredVehicleJourney")) {
                 vehiclesByRoute.add(readVehicle(parser));
-            } /*else {
+            } else {
                 //Skips unwanted entries
                 skip(parser);
-            }*/
+            }
+            */
+            switch(eventType){
+
+                case XmlPullParser.START_TAG:
+                    if(tagName.equalsIgnoreCase("MonitoredVehicleJourney")){
+                        parser.next();
+                        String text = parser.getText();
+                        parser.nextTag();
+                    }
+
+                    parser.next();
+                case XmlPullParser.TEXT:
+                case XmlPullParser.END_TAG:
+                    parser.nextTag();
+                default:
+                    parser.nextTag();
+                    break;
+            }
         }
         return vehiclesByRoute;
     }
 
-    public static class MonitoredVehicleByRoute {
+    static class MonitoredVehicleByRoute {
         //Represent a <tag> description from the returned XML.
-        public final String dataFrameRef;
-        public final String datedVehicleJourneyRef;
-        public final String publishedLineName;
-        public final String originRef;
-        public final String destinationRef;
-        public final String lineRef;
-        public final String directionRef;
-        public final String monitored;
-        public final String longitude;
-        public final String latitude;
-        public final String progressRate;
-        public final String courseOfJourneyRef;
-        public final String vehicleRef;
-        public final String lastGPSFix;
-        public final String scheduled;
-        public final String bearing;
-        public final String speed;
-        public final String destinationName;
+        private final String dataFrameRef;
+        private final String datedVehicleJourneyRef;
+        private final String publishedLineName;
+        private final String originRef;
+        private final String destinationRef;
+        private final String lineRef;
+        private final String directionRef;
+        private final String monitored;
+        private final String longitude;
+        private final String latitude;
+        private final String progressRate;
+        private final String courseOfJourneyRef;
+        private final String vehicleRef;
+        private final String lastGPSFix;
+        private final String scheduled;
+        private final String bearing;
+        private final String speed;
+        private final String destinationName;
 
         private MonitoredVehicleByRoute(String dataFrameRef,String datedVehicleJourneyRef ,String publishedLineName, String originRef, String destinationRef,
                                         String lineRef, String directionRef,String monitored ,String longitude, String latitude,String progressRate, String courseOfJourneyRef,
@@ -100,6 +124,22 @@ public class UTATraxXMLParser {
         }
         private String getLineRef() {return this.lineRef;}
         private String getDirectionRef(){return this.directionRef;}
+        private String getPublishedLineName(){return this.publishedLineName;}
+        private String getDataFrameRef(){return this.dataFrameRef;}
+        private String getDatedVehicleJourneyRef(){return this.datedVehicleJourneyRef;}
+        private String getOriginRef(){return this.originRef;}
+        private String getDestinationRef(){return this.destinationRef;}
+        private String getMonitored(){return this.monitored;}
+        private String getLongitude(){return this.longitude;}
+        private String getLatitude(){return this.latitude;}
+        private String getProgressRate(){return this.progressRate;}
+        private String getCourseOfJourneyRef(){return this.courseOfJourneyRef;}
+        private String getVehicleRef(){return this.vehicleRef;}
+        private String getLastGPSFix(){return this.lastGPSFix;}
+        private String getScheduled(){return this.scheduled;}
+        private String getBearing(){return this.bearing;}
+        private String getSpeed(){return this.speed;}
+        private String getDestinationName() {return this.destinationName;}
     }
 
 

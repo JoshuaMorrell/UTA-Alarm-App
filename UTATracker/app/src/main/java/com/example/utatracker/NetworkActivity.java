@@ -9,14 +9,17 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
+import java.util.Map;
 
 
 public class NetworkActivity extends AppCompatActivity {
@@ -54,7 +57,7 @@ public class NetworkActivity extends AppCompatActivity {
     // Uploads XML from stackoverflow.com, parses it, and combines it with
 // HTML markup. Returns HTML string.
     private String loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {
-        InputStream stream = null;
+        BufferedReader stream = null;
 
         List<UTATraxXMLParser.MonitoredVehicleByRoute> entries = null;
 
@@ -78,16 +81,23 @@ public class NetworkActivity extends AppCompatActivity {
     }
 
 
+
         //Gets input stream to be read from.
         try {
-            stream = conn.getInputStream();
-            int bytesInStream = stream.available();
-            int length = conn.getContentLength();
-            String s = conn.getResponseMessage();
-            int responseCode = conn.getResponseCode();
-            String request = conn.getRequestMethod();
 
-            entries = UTATraxXMLParser.parse(stream);
+            //stream = conn.getInputStream();
+
+            stream = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder total = new StringBuilder();
+            String line;
+            while ((line = stream.readLine()) != null) {
+                total.append(line);
+            }
+
+
+            InputStream inputStream = new ByteArrayInputStream(total.toString().getBytes("UTF-8"));
+            BufferedInputStream streamReader = new BufferedInputStream(inputStream);
+            entries = UTATraxXMLParser.parse(streamReader);
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
         } finally {
@@ -106,6 +116,7 @@ public class NetworkActivity extends AppCompatActivity {
         // This section processes the entries list to combine each entry with HTML markup.
         // Each entry is displayed in the UI as a link that optionally includes
         // a text summary.
+        /*
         for (UTATraxXMLParser.MonitoredVehicleByRoute vehicle : entries) {
             htmlString.append("<p>");
             htmlString.append(vehicle.lineRef + "\n\r");
@@ -113,6 +124,8 @@ public class NetworkActivity extends AppCompatActivity {
             // If the user set the preference to include summary text,
             // adds it to the display.
         }
+        */
+
         return htmlString.toString();
     }
 
