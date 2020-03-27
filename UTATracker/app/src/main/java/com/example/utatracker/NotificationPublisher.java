@@ -9,27 +9,36 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.core.app.NotificationManagerCompat;
+
 
 public class NotificationPublisher extends BroadcastReceiver {
     public static final String CHANNEL_ID = "ChannelID";
     public static final String NOTIFICATION = "notification";
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("tag", "~~~~~~GOT HERE~~~~~~~~~");
-        NotificationManager notificationManager = (NotificationManager)context.getSystemService(
-                Context.NOTIFICATION_SERVICE);
+        createNotificationChannel(context);
         Notification notification = intent.getParcelableExtra(NOTIFICATION);
 
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+
+// notificationId is a unique int for each notification that you must define
+        notificationManager.notify(1, notification);
+    }
+
+    private void createNotificationChannel(Context context) {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(
-                    CHANNEL_ID, "Notification Channel", NotificationManager.IMPORTANCE_HIGH);
-            assert notificationManager != null;
-
-            notificationManager.createNotificationChannel(notificationChannel);
+            CharSequence name = "Channel name";
+            String description = "channel description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
-
-        int id = intent.getIntExtra(CHANNEL_ID, 0);
-        assert notificationManager != null;
-        notificationManager.notify(id, notification);
     }
 }
