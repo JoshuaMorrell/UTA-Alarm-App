@@ -110,37 +110,6 @@ public class NetworkActivity extends AppCompatActivity {
             conn.disconnect();
 
         }
-
-        // StackOverflowXmlParser returns a List (called "entries") of Entry objects.
-        // Each Entry object represents a single post in the XML feed.
-        // This section processes the entries list to combine each entry with HTML markup.
-        // Each entry is displayed in the UI as a link that optionally includes
-        // a text summary.
-        /*
-        for (UTATraxXMLParser.MonitoredVehicleByRoute vehicle : entries) {
-            htmlString.append("<p>");
-            htmlString.append(vehicle.lineRef + "\n\r");
-            htmlString.append(vehicle.directionRef + "</p>");
-            // If the user set the preference to include summary text,
-            // adds it to the display.
-        }
-        */
-
         return htmlString.toString();
-    }
-
-    // Given a string representation of a URL, sets up a connection and gets
-// an input stream.
-    private InputStream downloadUrl(String urlString) throws IOException {
-        URL url = new URL(urlString);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setReadTimeout(10000 /* milliseconds */);
-        conn.setConnectTimeout(15000 /* milliseconds */);
-        conn.setRequestMethod("GET");
-        conn.setDoInput(true);
-        // Starts the query
-        conn.connect();
-
-        return conn.getInputStream();
     }
 }

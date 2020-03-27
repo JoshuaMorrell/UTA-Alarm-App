@@ -43,36 +43,111 @@ public class UTATraxXMLParser {
     private static List<MonitoredVehicleByRoute> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
         List<MonitoredVehicleByRoute> vehiclesByRoute = new ArrayList();
 
-        //TODO:Get following data for each Call for Validations
-        // ResponseTimestamp, ValidUntil RecordedAtTime
         int eventType = parser.getEventType();
-        MonitoredVehicleByRoute v;
+        MonitoredVehicleByRoute v = new MonitoredVehicleByRoute();
         while (eventType != XmlPullParser.END_DOCUMENT) {
             String tagName = parser.getName();
-            /*
-            // Starts by looking for MonitoredVehicleJourney Tag
-            if (name.equals("MonitoredVehicleJourney")) {
-                vehiclesByRoute.add(readVehicle(parser));
-            } else {
-                //Skips unwanted entries
-                skip(parser);
-            }
-            */
             switch(eventType){
 
                 case XmlPullParser.START_TAG:
+                    if(tagName.isEmpty()){
+                        eventType = parser.next();
+                    } else if(tagName.equalsIgnoreCase("ResponseTimestamp")){
+                        v.setResponseTimestamp(parser.nextText());
+                        eventType = parser.next();
+                    } else if(tagName.equalsIgnoreCase("ValidUntil")){
+                        v.setValidUntil(parser.nextText());
+                        eventType = parser.next();
+                    } else if(tagName.equalsIgnoreCase("RecordedAtTime")){
+                        v.setRecordedAtTime(parser.nextText());
+                        eventType = parser.next();
+                    } else if(tagName.equalsIgnoreCase("LineRef")){
+                        v.setLineRef(parser.nextText());
+                        eventType = parser.next();
+                    } else if(tagName.equalsIgnoreCase("DirectionRef")){
+                        v.setDirectionRef(parser.nextText());
+                        eventType = parser.next();
+                    } else if(tagName.equalsIgnoreCase("DataFrameRef")){
+                        v.setDataFrameRef(parser.nextText());
+                        eventType = parser.next();
+                    } else if(tagName.equalsIgnoreCase("DatedVehicleJourneyRef")){
+                        v.setDatedVehicleJourneyRef(parser.nextText());
+                        eventType = parser.next();
+                    } else if(tagName.equalsIgnoreCase("PublishedLineName")){
+                        v.setPublishedLineName(parser.nextText());
+                        eventType = parser.next();
+                    } else if(tagName.equalsIgnoreCase("OriginRef")){
+                        v.setOriginRef(parser.nextText());
+                        eventType = parser.next();
+                    } else if(tagName.equalsIgnoreCase("DestinationRef")){
+                        v.setDestinationRef(parser.nextText());
+                        eventType = parser.next();
+                    } else if(tagName.equalsIgnoreCase("Monitored")){
+                        v.setMonitored(parser.nextText());
+                        eventType = parser.next();
+                    } else if(tagName.equalsIgnoreCase("Longitude")){
+                        v.setLongitude(parser.nextText());
+                        eventType = parser.next();
+                    }else if(tagName.equalsIgnoreCase("Latitude")){
+                        v.setLatitude(parser.nextText());
+                        eventType = parser.next();
+                    }else if(tagName.equalsIgnoreCase("ProgressRate")){
+                        v.setProgressRate(parser.nextText());
+                        eventType = parser.next();
+                    }else if(tagName.equalsIgnoreCase("CourseOfJourneyRef")){
+                        v.setCourseOfJourneyRef(parser.nextText());
+                        eventType = parser.next();
+                    }else if(tagName.equalsIgnoreCase("VehicleRef")){
+                        v.setVehicleRef(parser.nextText());
+                        eventType = parser.next();
+                    }else if(tagName.equalsIgnoreCase("StopPointRef")){
+                        v.setStopPointRef(parser.nextText());
+                        eventType = parser.next();
+                    }else if(tagName.equalsIgnoreCase("VisitNumber")){
+                        v.setVisitNumber(parser.nextText());
+                        eventType = parser.next();
+                    }else if(tagName.equalsIgnoreCase("VehicleAtStop")){
+                        v.setVehicleAtStop(parser.nextText());
+                        eventType = parser.next();
+                    }else if(tagName.equalsIgnoreCase("LastGPSFix")){
+                        v.setLastGPSFix(parser.nextText());
+                        eventType = parser.next();
+                    }else if(tagName.equalsIgnoreCase("Scheduled")){
+                        v.setScheduled(parser.nextText());
+                        eventType = parser.next();
+                    }else if(tagName.equalsIgnoreCase("Bearing")){
+                        v.setBearing(parser.nextText());
+                        eventType = parser.next();
+                    } else if(tagName.equalsIgnoreCase("Speed")){
+                        v.setSpeed(parser.nextText());
+                        eventType = parser.next();
+                    } else if(tagName.equalsIgnoreCase("DestinationName")){
+                        v.setDestinationName(parser.nextText());
+                        eventType = parser.next();
+                    } else{
+                        eventType = parser.next();
+                    }
+                    break;
+                case XmlPullParser.TEXT:
+                    eventType = parser.next();
+                    break;
+                case XmlPullParser.END_TAG:
+                    //Add MonitoredVehiclebyRoute to list and create a new MonitoredVehiclebyRoute
                     if(tagName.equalsIgnoreCase("MonitoredVehicleJourney")){
-                        parser.next();
-                        String text = parser.getText();
-                        parser.nextTag();
+                        vehiclesByRoute.add(v);
+                        v = new MonitoredVehicleByRoute();
+                        eventType = parser.next();
+                    }
+                    else{
+                        eventType = parser.next();
                     }
 
-                    parser.next();
-                case XmlPullParser.TEXT:
-                case XmlPullParser.END_TAG:
-                    parser.nextTag();
+                    break;
+                case XmlPullParser.IGNORABLE_WHITESPACE:
+                    eventType = parser.next();
+                    break;
                 default:
-                    parser.nextTag();
+                   eventType = parser.next();
                     break;
             }
         }
@@ -81,28 +156,40 @@ public class UTATraxXMLParser {
 
     static class MonitoredVehicleByRoute {
         //Represent a <tag> description from the returned XML.
-        private final String dataFrameRef;
-        private final String datedVehicleJourneyRef;
-        private final String publishedLineName;
-        private final String originRef;
-        private final String destinationRef;
-        private final String lineRef;
-        private final String directionRef;
-        private final String monitored;
-        private final String longitude;
-        private final String latitude;
-        private final String progressRate;
-        private final String courseOfJourneyRef;
-        private final String vehicleRef;
-        private final String lastGPSFix;
-        private final String scheduled;
-        private final String bearing;
-        private final String speed;
-        private final String destinationName;
+        private String responseTimestamp;
+        private String validUntil;
+        private String recordedAtTime;
+        private String dataFrameRef;
+        private String datedVehicleJourneyRef;
+        private String publishedLineName;
+        private String originRef;
+        private String destinationRef;
+        private String lineRef;
+        private String directionRef;
+        private String monitored;
+        private String longitude;
+        private String latitude;
+        private String progressRate;
+        private String courseOfJourneyRef;
+        private String vehicleRef;
+        private String stopPointRef;
+        private String visitNumber;
+        private String vehicleAtStop;
+        private String lastGPSFix;
+        private String scheduled;
+        private String bearing;
+        private String speed;
+        private String destinationName;
 
+        //Constructor with params
         private MonitoredVehicleByRoute(String dataFrameRef,String datedVehicleJourneyRef ,String publishedLineName, String originRef, String destinationRef,
                                         String lineRef, String directionRef,String monitored ,String longitude, String latitude,String progressRate, String courseOfJourneyRef,
-                                        String vehicleRef, String lastGPSFix, String scheduled, String bearing, String speed, String destinationName ) {
+                                        String vehicleRef,String stopPointRef ,String visitNumber,String vehicleAtStop,String lastGPSFix, String scheduled, String bearing, String speed, String destinationName, String responseTimestamp,
+                                        String validUntil, String recordedAtTime ) {
+
+            this.responseTimestamp = responseTimestamp;
+            this.validUntil = validUntil;
+            this.recordedAtTime = recordedAtTime;
             this.dataFrameRef = dataFrameRef;
             this.datedVehicleJourneyRef = datedVehicleJourneyRef;
             this.publishedLineName = publishedLineName;
@@ -116,164 +203,91 @@ public class UTATraxXMLParser {
             this.progressRate = progressRate;
             this.courseOfJourneyRef = courseOfJourneyRef;
             this.vehicleRef = vehicleRef;
+            this.stopPointRef = stopPointRef;
+            this.visitNumber = visitNumber;
+            this.vehicleAtStop = vehicleAtStop;
             this.lastGPSFix = lastGPSFix;
             this.scheduled = scheduled;
             this.bearing = bearing;
             this.speed = speed;
             this.destinationName = destinationName;
+
         }
+        //Constructor no params
+        private MonitoredVehicleByRoute(){
+
+        }
+
+        private String getStopPointRef(){return this.stopPointRef;}
+        private void setStopPointRef(String stopPointRef){this.stopPointRef = stopPointRef;}
+
+        private String getVisitNumber(){return this.visitNumber;}
+        private void setVisitNumber(String visitNumber){this.visitNumber = visitNumber;}
+
+        private String getVehicleAtStop(){return this.vehicleAtStop;}
+        private void setVehicleAtStop(String vehicleAtStop){this.vehicleAtStop = vehicleAtStop;}
+
+        private String getResponseTimestamp(){return this.responseTimestamp;}
+        private void setResponseTimestamp(String responseTimestamp){this.responseTimestamp = responseTimestamp;}
+
+        private String getValidUntil(){return this.validUntil;}
+        private void setValidUntil(String validUntil){this.validUntil = validUntil;}
+
+        private String getRecordedAtTime(){return this.recordedAtTime;}
+        private void setRecordedAtTime(String recordedAtTime){this.recordedAtTime = recordedAtTime;}
+
         private String getLineRef() {return this.lineRef;}
+        private void setLineRef(String lineRef) {this.lineRef = lineRef;}
+
         private String getDirectionRef(){return this.directionRef;}
+        private void setDirectionRef(String directionRef){this.directionRef = directionRef;}
+
         private String getPublishedLineName(){return this.publishedLineName;}
+        private void setPublishedLineName(String publishedLineName){this.publishedLineName = publishedLineName;}
+
         private String getDataFrameRef(){return this.dataFrameRef;}
+        private void setDataFrameRef(String dataFrameRef) {this.dataFrameRef = dataFrameRef;}
+
         private String getDatedVehicleJourneyRef(){return this.datedVehicleJourneyRef;}
+        private void setDatedVehicleJourneyRef(String datedVehicleJourneyRef){this.datedVehicleJourneyRef = datedVehicleJourneyRef;}
+
         private String getOriginRef(){return this.originRef;}
+        private void setOriginRef(String originRef){this.originRef = originRef;}
+
         private String getDestinationRef(){return this.destinationRef;}
+        private void setDestinationRef(String destinationRef){this.destinationRef = destinationRef;}
+
         private String getMonitored(){return this.monitored;}
+        private void setMonitored(String monitored){this.monitored = monitored;}
+
         private String getLongitude(){return this.longitude;}
+        private void setLongitude(String longitude){this.longitude = longitude;}
+
         private String getLatitude(){return this.latitude;}
+        private void setLatitude(String latitude){this.latitude = latitude;}
+
         private String getProgressRate(){return this.progressRate;}
+        private void setProgressRate(String progressRate){this.progressRate = progressRate;}
+
         private String getCourseOfJourneyRef(){return this.courseOfJourneyRef;}
+        private void setCourseOfJourneyRef(String courseOfJourneyRef){this.courseOfJourneyRef = courseOfJourneyRef;}
+
         private String getVehicleRef(){return this.vehicleRef;}
+        private void setVehicleRef(String vehicleRef){this.vehicleRef = vehicleRef;}
+
         private String getLastGPSFix(){return this.lastGPSFix;}
+        private void setLastGPSFix(String lastGPSFix){this.lastGPSFix = lastGPSFix;}
+
         private String getScheduled(){return this.scheduled;}
+        private void setScheduled(String scheduled){this.scheduled = scheduled;}
+
         private String getBearing(){return this.bearing;}
+        private void setBearing(String bearing){this.bearing = bearing;}
+
         private String getSpeed(){return this.speed;}
+        private void setSpeed(String speed){this.speed = speed;}
+
         private String getDestinationName() {return this.destinationName;}
-    }
-
-
-    // Parses the contents of an entry. If it encounters a title, summary, or link tag, hands them off
-// to their respective "read" methods for processing. Otherwise, skips the tag.
-
-    /**
-     * Parses the contents of a monitored vehicle. If it encounters a LineRef,DirectionRef,FramedVehicleJourneyRef,PublishedLineName,
-     * OriginRef,DestinationRef, Monitored, VehicleLocation, ProgressRate, CourseOfJourneyRef, VehicleRef or Extensions tag,
-     * handing them off to their 'read' methods for processing; otherwise skips the tag.
-     * @param parser
-     * @return
-     * @throws XmlPullParserException
-     * @throws IOException
-     */
-    private static MonitoredVehicleByRoute readVehicle(XmlPullParser parser) throws XmlPullParserException, IOException {
-        parser.require(XmlPullParser.START_TAG, ns, "MonitoredVehicleJourney");
-        String dataFrameRef = null;
-        String datedVehicleJourneyRef = null;
-        String publishedLineName = null;
-        String originRef = null;
-        String destinationRef = null;
-        String lineRef = null;
-        String directionRef = null;
-        String monitored = null;
-        String longitude = null;
-        String latitude = null;
-        String progressRate = null;
-        String courseOfJourneyRef = null;
-        String vehicleRef = null;
-        String lastGPSFix = null;
-        String scheduled = null;
-        String bearing = null;
-        String speed = null;
-        String destinationName = null;
-
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-            String name = parser.getName();
-            if (name.equals("LineRef")) {
-                lineRef = readLineRef(parser);
-            } else if (name.equals("DirectionRef")) {
-                directionRef = readDirectionRef(parser);
-            }
-            /*else if (name.equals("FramedVehicleJourneyRef")) {
-                dataFrameRef = readDataFrameRef(parser);
-                datedVehicleJourneyRef = readDatedVehicleJourneyRef(parser);
-            }  else if (name.equals("PublishedLineName")) {
-                publishedLineName = readPublishedLineName(parser);
-            } else if (name.equals("OriginRef")) {
-                originRef = readOriginRef(parser);
-            } else if (name.equals("DestinationRef")) {
-                destinationRef = readDestinationRef(parser);
-            } else if (name.equals("Monitored")) {
-                monitored = readMonitored(parser);
-            } else if (name.equals("VehicleLocation")) {
-                longitude = readLongitude(parser);
-                latitude = readLatitude(parser);
-            } else if (name.equals("ProgressRate")) {
-                progressRate = readProgressRate(parser);
-            } else if (name.equals("CourseOfJourneyRef")) {
-                courseOfJourneyRef = readCourseOfJourneyRef(parser);
-            } else if (name.equals("VehicleRef")) {
-                vehicleRef = readVehicleRef(parser);
-            } else if (name.equals("Extensions")) {
-                lastGPSFix = readLastGPSFix(parser);
-                scheduled = readScheduled(parser);
-                bearing = readBearing(parser);
-                speed = readSpeed(parser);
-                destinationName = readDestinationName(parser);
-            }*/ else {
-                skip(parser);
-            }
-        }
-        return new MonitoredVehicleByRoute( dataFrameRef, datedVehicleJourneyRef , publishedLineName,  originRef,  destinationRef,
-                lineRef,  directionRef,monitored ,longitude,  latitude, progressRate,  courseOfJourneyRef,
-                vehicleRef,  lastGPSFix,  scheduled,  bearing,  speed,  destinationName);
-    }
-
-
-    private static void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
-        if (parser.getEventType() != XmlPullParser.START_TAG) {
-            throw new IllegalStateException();
-        }
-        int depth = 1;
-        while (depth != 0) {
-            switch (parser.next()) {
-                case XmlPullParser.END_TAG:
-                    depth--;
-                    break;
-                case XmlPullParser.START_TAG:
-                    depth++;
-                    break;
-            }
-        }
-    }
-
-    /**
-     *  Processes LineRef tag from the feed.
-     * @param parser
-     * @return
-     * @throws IOException
-     * @throws XmlPullParserException
-     */
-    private static String readLineRef(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, ns, "title");
-        String lineRef = readText(parser);
-        parser.require(XmlPullParser.END_TAG, ns, "title");
-        return lineRef;
-    }
-
-    private static String readDirectionRef(XmlPullParser parser) throws IOException, XmlPullParserException {
-        parser.require(XmlPullParser.START_TAG, ns, "DirectionRef");
-        String directionRef = readText(parser);
-        parser.require(XmlPullParser.END_TAG, ns, "title");
-        return directionRef;
-    }
-
-
-    /**
-     * Extracts the text values from a tag.
-     * @param parser
-     * @return
-     * @throws IOException
-     * @throws XmlPullParserException
-     */
-    private static String readText(XmlPullParser parser) throws IOException, XmlPullParserException {
-        String result = "";
-        if (parser.next() == XmlPullParser.TEXT) {
-            result = parser.getText();
-            parser.nextTag();
-        }
-        return result;
+        private void setDestinationName(String destinationName){this.destinationName = destinationName;}
     }
 }
