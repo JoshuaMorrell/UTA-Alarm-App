@@ -1,21 +1,28 @@
 package com.example.utatracker;
-import android.util.Xml;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
-
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class Represents a UTATraxXMLParser. It takes in the retrieved BufferedInputStream from the
+ * NetworkActivity (AsyncTask).
+ *
+ */
 public class UTATraxXMLParser {
-    // We don't use namespaces
-    private static final String ns = null;
 
+    /**
+     * Reads the BufferedInputStream from start to end and grabs the text of each xml tag
+     * and creates a MonitoredVehicleByRoute object that has all vehicles given the requested
+     * route.
+     * @param in
+     * @return List of MonitoredVehiclesByRoute
+     * @throws XmlPullParserException
+     * @throws IOException
+     */
     public static List<MonitoredVehicleByRoute> parse(BufferedInputStream in) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
@@ -30,11 +37,9 @@ public class UTATraxXMLParser {
 
 
     /**
-     *
-     * The readFeed() method does the actual work of processing the feed.
-     * It looks for elements tagged "entry" as a starting point for recursively processing the feed. If a tag isn't an entry tag, it skips it.
-     * Once the whole feed has been recursively processed, readFeed() returns a List containing the entries (including nested data members)
-     * it extracted from the feed. This List is then returned by the parser.
+     * The readFeed method takes the setup XmlPullParser and does all the necessary parsing.
+     * Goes line by line and grabs the information of desired xml tags.
+     * Builds a List<MonitoredVehicleByRoute> for n number of MonitoredVehicles returned by the UTA API.
      * @param parser
      * @return
      * @throws XmlPullParserException
@@ -52,40 +57,46 @@ public class UTATraxXMLParser {
                 case XmlPullParser.START_TAG:
                     if(tagName.isEmpty()){
                         eventType = parser.next();
-                    } else if(tagName.equalsIgnoreCase("ResponseTimestamp")){
+                    }else if(tagName.equalsIgnoreCase("ResponseTimestamp")){
+                        //ResponseTimeStamp will only be recorded once and found in the first
+                        //MonitoredVehiclebyRoute at vehiclesByRoute[0]. All other objects will have null for these parameters
                         v.setResponseTimestamp(parser.nextText());
                         eventType = parser.next();
-                    } else if(tagName.equalsIgnoreCase("ValidUntil")){
+                    }else if(tagName.equalsIgnoreCase("ValidUntil")){
+                        //ValidUntil will only be recorded once and found in the first
+                        //MonitoredVehiclebyRoute at vehiclesByRoute[0]. All other objects will have null for these parameters
                         v.setValidUntil(parser.nextText());
                         eventType = parser.next();
-                    } else if(tagName.equalsIgnoreCase("RecordedAtTime")){
+                    }else if(tagName.equalsIgnoreCase("RecordedAtTime")){
+                        //RecordedAtTime will only be recorded once and found in the first
+                        //MonitoredVehiclebyRoute at vehiclesByRoute[0]. All other objects will have null for these parameters
                         v.setRecordedAtTime(parser.nextText());
                         eventType = parser.next();
-                    } else if(tagName.equalsIgnoreCase("LineRef")){
+                    }else if(tagName.equalsIgnoreCase("LineRef")){
                         v.setLineRef(parser.nextText());
                         eventType = parser.next();
-                    } else if(tagName.equalsIgnoreCase("DirectionRef")){
+                    }else if(tagName.equalsIgnoreCase("DirectionRef")){
                         v.setDirectionRef(parser.nextText());
                         eventType = parser.next();
-                    } else if(tagName.equalsIgnoreCase("DataFrameRef")){
+                    }else if(tagName.equalsIgnoreCase("DataFrameRef")){
                         v.setDataFrameRef(parser.nextText());
                         eventType = parser.next();
-                    } else if(tagName.equalsIgnoreCase("DatedVehicleJourneyRef")){
+                    }else if(tagName.equalsIgnoreCase("DatedVehicleJourneyRef")){
                         v.setDatedVehicleJourneyRef(parser.nextText());
                         eventType = parser.next();
-                    } else if(tagName.equalsIgnoreCase("PublishedLineName")){
+                    }else if(tagName.equalsIgnoreCase("PublishedLineName")){
                         v.setPublishedLineName(parser.nextText());
                         eventType = parser.next();
-                    } else if(tagName.equalsIgnoreCase("OriginRef")){
+                    }else if(tagName.equalsIgnoreCase("OriginRef")){
                         v.setOriginRef(parser.nextText());
                         eventType = parser.next();
-                    } else if(tagName.equalsIgnoreCase("DestinationRef")){
+                    }else if(tagName.equalsIgnoreCase("DestinationRef")){
                         v.setDestinationRef(parser.nextText());
                         eventType = parser.next();
-                    } else if(tagName.equalsIgnoreCase("Monitored")){
+                    }else if(tagName.equalsIgnoreCase("Monitored")){
                         v.setMonitored(parser.nextText());
                         eventType = parser.next();
-                    } else if(tagName.equalsIgnoreCase("Longitude")){
+                    }else if(tagName.equalsIgnoreCase("Longitude")){
                         v.setLongitude(parser.nextText());
                         eventType = parser.next();
                     }else if(tagName.equalsIgnoreCase("Latitude")){
@@ -101,12 +112,18 @@ public class UTATraxXMLParser {
                         v.setVehicleRef(parser.nextText());
                         eventType = parser.next();
                     }else if(tagName.equalsIgnoreCase("StopPointRef")){
+                        //If Monitored = False, these values will be null
+                        //else if Monitored = True, these will have values.
                         v.setStopPointRef(parser.nextText());
                         eventType = parser.next();
                     }else if(tagName.equalsIgnoreCase("VisitNumber")){
+                        //If Monitored = False, these values will be null
+                        //else if Monitored = True, these will have values.
                         v.setVisitNumber(parser.nextText());
                         eventType = parser.next();
                     }else if(tagName.equalsIgnoreCase("VehicleAtStop")){
+                        //If Monitored = False, these values will be null
+                        //else if Monitored = True, these will have values.
                         v.setVehicleAtStop(parser.nextText());
                         eventType = parser.next();
                     }else if(tagName.equalsIgnoreCase("LastGPSFix")){
@@ -143,9 +160,6 @@ public class UTATraxXMLParser {
                     }
 
                     break;
-                case XmlPullParser.IGNORABLE_WHITESPACE:
-                    eventType = parser.next();
-                    break;
                 default:
                    eventType = parser.next();
                     break;
@@ -181,7 +195,34 @@ public class UTATraxXMLParser {
         private String speed;
         private String destinationName;
 
-        //Constructor with params
+        /**
+         * This class represents a MonitoredVehicleByRoute and stores all vehicles information
+         * retrieved from an API by route call.
+         * @param dataFrameRef
+         * @param datedVehicleJourneyRef
+         * @param publishedLineName
+         * @param originRef
+         * @param destinationRef
+         * @param lineRef
+         * @param directionRef
+         * @param monitored
+         * @param longitude
+         * @param latitude
+         * @param progressRate
+         * @param courseOfJourneyRef
+         * @param vehicleRef
+         * @param stopPointRef
+         * @param visitNumber
+         * @param vehicleAtStop
+         * @param lastGPSFix
+         * @param scheduled
+         * @param bearing
+         * @param speed
+         * @param destinationName
+         * @param responseTimestamp
+         * @param validUntil
+         * @param recordedAtTime
+         */
         private MonitoredVehicleByRoute(String dataFrameRef,String datedVehicleJourneyRef ,String publishedLineName, String originRef, String destinationRef,
                                         String lineRef, String directionRef,String monitored ,String longitude, String latitude,String progressRate, String courseOfJourneyRef,
                                         String vehicleRef,String stopPointRef ,String visitNumber,String vehicleAtStop,String lastGPSFix, String scheduled, String bearing, String speed, String destinationName, String responseTimestamp,
@@ -213,11 +254,11 @@ public class UTATraxXMLParser {
             this.destinationName = destinationName;
 
         }
-        //Constructor no params
+        //Constructor
         private MonitoredVehicleByRoute(){
 
         }
-
+        //Getters and Setters
         private String getStopPointRef(){return this.stopPointRef;}
         private void setStopPointRef(String stopPointRef){this.stopPointRef = stopPointRef;}
 

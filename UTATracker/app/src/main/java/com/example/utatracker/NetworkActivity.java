@@ -1,27 +1,22 @@
 package com.example.utatracker;
-
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.webkit.WebView;
-
 import org.xmlpull.v1.XmlPullParserException;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-
+/**
+ * This class is used to make an AysncTask to retrieve an inputStream from UTA API
+ */
 public class NetworkActivity extends AppCompatActivity {
 
     @Override
@@ -32,31 +27,40 @@ public class NetworkActivity extends AppCompatActivity {
         new DownloadXmlTask().execute(str);
 
     }
-    // Implementation of AsyncTask used to download XML feed from UTA
-    private class DownloadXmlTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-            try {
-                return loadXmlFromNetwork(urls[0]);
-            } catch (IOException e) {
 
-                return getResources().getString(R.string.connection_error);
+    /**
+     * Implementation of AsyncTask used to download XML feed from UTA.
+     * Input String: URL
+     * Output List: Returns a list of the requested API information
+     */
+    private class DownloadXmlTask extends AsyncTask<String, Void, List> {
+        @Override
+        protected List doInBackground(String... urls) {
+            List<UTATraxXMLParser.MonitoredVehicleByRoute> toReturn = new ArrayList();
+            try {
+                toReturn = loadXmlFromNetwork(urls[0]);
+                return toReturn;
+            } catch (IOException e) {
+                return toReturn;
+
             } catch (XmlPullParserException e) {
-                return getResources().getString(R.string.xml_error);
+                return toReturn;
             }
         }
 
-        @Override
-        protected void onPostExecute(String result) {
-            //setContentView(R.layout.activity_network);
-            // Displays the HTML string in the UI via a WebView
-            //WebView myWebView = (WebView) findViewById(R.id.webview);
-            //myWebView.loadData(result, "text/html", null);
-        }
     }
-    // Uploads XML from stackoverflow.com, parses it, and combines it with
-// HTML markup. Returns HTML string.
-    private String loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {
+
+    /**
+     * Makes a URLConnection to the desired UTA API, retrieving the inputStream.
+     * Uses a StringBuilder to store all the information from the inputStream.
+     * Turns built string into a BufferedInputStream that can be read from
+     * the UTATraxXMLParser class.
+     * @param urlString
+     * @return List
+     * @throws XmlPullParserException
+     * @throws IOException
+     */
+    private List loadXmlFromNetwork(String urlString) throws XmlPullParserException, IOException {
         BufferedReader stream = null;
 
         List<UTATraxXMLParser.MonitoredVehicleByRoute> entries = null;
@@ -70,46 +74,30 @@ public class NetworkActivity extends AppCompatActivity {
         conn.setConnectTimeout(15000 /* milliseconds */);
         conn.setRequestMethod("GET");
         conn.setDoInput(true);
-        //conn.setInstanceFollowRedirects(true);
 
         //Creates connection to UTA API
         try{
             conn.connect();
         }
         catch (IOException e){
-            return e.toString();
-    }
-
-
-
+        }
         //Gets input stream to be read from.
         try {
-
-            //stream = conn.getInputStream();
-
             stream = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             StringBuilder total = new StringBuilder();
             String line;
             while ((line = stream.readLine()) != null) {
                 total.append(line);
             }
-
-
             InputStream inputStream = new ByteArrayInputStream(total.toString().getBytes("UTF-8"));
             BufferedInputStream streamReader = new BufferedInputStream(inputStream);
             entries = UTATraxXMLParser.parse(streamReader);
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
         } finally {
-
-            //if (stream != null) {
-             //   stream.close();
-
-           // }
             stream.close();
             conn.disconnect();
-
         }
-        return htmlString.toString();
+        return entries;
     }
 }
