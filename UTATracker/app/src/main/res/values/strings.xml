@@ -12,4 +12,105 @@
     <string name="login_failed">"Login failed"</string>
     <string name="connection_error">"Error Connection while Loading XML from network"</string>
     <string name="xml_error">"XML Parser Exception while loading XML from network."</string>
+
+    <!-- Blue Line Stops (order is sequential and should match stop order to direction of travel)-->
+    <string name="directionOfTravel_blueline_SaltLakeCt">"Salt Lake Central Station"</string>
+    <string name="blueline_OldGreektown">"Old Greektown Station"</string>
+    <string name="blueline_Planetarium">"Planetarium Station"</string>
+    <string name="blueline_Arena">"Arena Station"</string>
+    <string name="blueline_TempleSquare">"Temple Square Station"</string>
+    <string name="blueline_CityCenter">"City Center Station"</string>
+    <string name="blueline_GallivanPlaza">"Gallivan Plaza Station"</string>
+    <string name="blueline_Courthouse">"Courthouse Station"</string>
+    <string name="blueline_900South">"900 South Station"</string>
+    <string name="blueline_Ballpark">"Ballpark Station"</string>
+    <string name="blueline_CentralPointe">"Central Pointe Station"</string>
+    <string name="blueline_Millcreek">"Millcreek Station"</string>
+    <string name="blueline_Meadowbrook">"Meadowbrook Station"</string>
+    <string name="blueline_MurrayNorth">"Murray North Station"</string>
+    <string name="blueline_MurrayCentral">"Murray Central Station"</string>
+    <string name="blueline_FashionPlaceWest">"Fashion Place West Station"</string>
+    <string name="blueline_MidvaleFortUnion">"Midvale Fort Union Station"</string>
+    <string name="blueline_MidvaleCenter">"Midvale Center Station"</string>
+    <string name="blueline_HistoricSandy">"Historic Sandy Station"</string>
+    <string name="blueline_SandyExpo">"Sandy Expo Station"</string>
+    <string name="blueline_SandyCivicCenter">"Sandy Civic Center Station"</string>
+    <string name="blueline_CrescentView">"Crescent View Station"</string>
+    <string name="blueline_KimballsLane">"Kimballs Lane Station"</string>
+    <string name="directionOfTravel_blueline_Draper">"Draper Town Center"</string>
+
+    <!-- Red Line Stops (order is sequential and should match stop order from direction of travel)-->
+    <string name="directionofTravel_redline_Medical">"U. Of U. Medical Center Station"</string>
+    <string name="redline_FortDouglas">"Fort Douglas Station"</string>
+    <string name="redline_SouthCampus">"University South Campus Station"</string>
+    <string name="redline_Stadium">"Stadium Station"</string>
+    <string name="redline_900East">"900 East Station"</string>
+    <string name="redline_Trolley">"Trolley Station"</string>
+    <string name="redline_Library">"Library Station"</string>
+    <string name="redline_Courthouse">"Courthouse Station"</string>
+    <string name="redline_900South">"900 South Station"</string>
+    <string name="redline_Ballpark">"Ballpark Station"</string>
+    <string name="redline_CentralPointe">"Central Pointe Station"</string>
+    <string name="redline_Millcreek">"Millcreek Station"</string>
+    <string name="redline_Meadowbrook">"Meadowbrook Station"</string>
+    <string name="redline_MurrayNorth">"Murray North Station"</string>
+    <string name="redline_MurrayCentral">"Murray Central Station"</string>
+    <string name="redline_FashionPlaceWest">"Fashion Place West Station"</string>
+    <string name="redline_BinghamJunction">"Bingham Junction Station"</string>
+    <string name="redline_HistoricGardner">"Historic Gardner Station"</string>
+    <string name="redline_WestJordanCityCenter">"West Jordan City Center Station"</string>
+    <string name="redline_2700WSugarFactoryRd">"2700 W Sugar Factory Rd Station"</string>
+    <string name="redline_JordanValley">"Jordan Valley Station"</string>
+    <string name="redline_4800WOldBinghamHwy">"4800 W Old Bingham Hwy Station"</string>
+    <string name="redline_5600WOldBinghamHwy">"5600 W Old Bingham Hwy Station"</string>
+    <string name="redline_SouthJordanParkway">"South Jordan Parkway Station"</string>
+    <string name="directionofTravel_redline_Daybreak">"Daybreak Parkway Station"</string>
+
+
+    <!-- Green Line Stops (order is sequential and should match stop order to direction of travel)-->
+    <string name="directionofTravel_greenline_WestValley">"West Valley Central Station"</string>
+    <string name="greenline_DeckerLake">"Decker Lake Station"</string>
+    <string name="greenline_RedwoodJunction">"Redwood Junction Station"</string>
+    <string name="greenline_RiverTrail">"River Trail Station"</string>
+    <string name="greenline_CentralPointe">"Central Pointe Station"</string>
+    <string name="greenline_Ballpark">"Ballpark Station"</string>
+    <string name="greenline_900South">"900 South Station"</string>
+    <string name="greenline_Courthouse">"Courthouse Station"</string>
+    <string name="greenline_GallivanPlaza">"Gallivan Plaza Station"</string>
+    <string name="greenline_CityCenter">"City Center Station"</string>
+    <string name="greenline_TempleSquare">"Temple Square Station"</string>
+    <string name="greenline_Arena">"Arena Station"</string>
+    <string name="greenline_NorthTempleBridge">"North Temple Bridge/Guadalupe"</string>
+    <string name="greenline_JacksonEuclid">"Jackson/Euclid Station"</string>
+    <string name="greenline_Fairpark">"Fairpark Station"</string>
+    <string name="greenline_Power">"Power Station"</string>
+    <string name="greenline_1940WNorthTemple">"1940 W North Temple Station"</string>
+    <string name="greenline_directionofTravel_">"Airport Station"</string>
+
+    <!-- S-Line Stops (order is sequential and should match stop order to direction of travel)-->
+    <string name="directionofTravel_sline_">"Fairmont Station"</string>
+    <string name="sline_Sugarmont">"Sugarmont Station"</string>
+    <string name="sline_700East">"700 East Station"</string>
+    <string name="sline_500East">"500 East Station"</string>
+    <string name="sline_300East">"300 East Station"</string>
+    <string name="sline_SouthSaltLakeCity">"South Salt Lake City Station"</string>
+    <string name="directionofTravel_sline_CentralPointe">"Central Pointe Station"</string>
+
+
+    <!-- Front Runner Stops (order is sequential and should match stop order to direction of travel)-->
+    <string name="directionOfTravel_frontrunner_ProvoCentralSB">"Provo Central Station"</string>
+    <string name="frontrunner_OremCentral">"Orem Central Station"</string>
+    <string name="frontrunner_AmericanFork">"American Fork Station"</string>
+    <string name="frontrunner_Lehi">"Lehi Station"</string>
+    <string name="frontrunner_Draper">"Draper Station"</string>
+    <string name="frontrunner_SouthJordan">"South Jordan Station"</string>
+    <string name="frontrunner_MurrayCentral">"Murray Central Station"</string>
+    <string name="frontrunner_SaltLakeCentral">"Salt Lake Central Station"</string>
+    <string name="frontrunner_NorthTemple">"North Temple Station"</string>
+    <string name="frontrunner_WoodsCross">"Woods Cross Station"</string>
+    <string name="frontrunner_Farmington">"Farmington Station"</string>
+    <string name="frontrunner_Layton">"Layton Station"</string>
+    <string name="frontrunner_Clearfield">"Clearfield Station"</string>
+    <string name="frontrunner_Roy">"Roy Station"</string>
+    <string name="directionOfTravel_frontrunner_OgdenNB">"Ogden Station"</string>
 </resources>
