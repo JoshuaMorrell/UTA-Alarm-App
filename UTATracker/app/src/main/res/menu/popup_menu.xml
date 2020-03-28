@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/firstStop"
+        android:title="Stop1"/>
+    <item android:id="@+id/secondStop"
+        android:title="Stop2"/>
+    <item android:id="@+id/thirdStop"
+        android:title="Stop3"/>
+</menu>

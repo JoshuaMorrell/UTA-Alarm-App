@@ -121,6 +121,40 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:clickable="true"
+                android:onClick="select_line"
+                android:background="?android:attr/selectableItemBackground">
+
+                <ImageView
+                    android:id="@+id/line_icon"
+                    android:layout_width="47dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="32dp"
+                    android:src="@drawable/ic_subway_black_24dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/line_icon">
+
+                    <TextView
+                        android:id="@+id/line_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15dp"
+                        android:text="Line"/>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/start_location"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
@@ -219,40 +253,6 @@
                         android:layout_height="wrap_content"
                         android:textSize="15dp"
                         android:text="Direction of Travel"/>
-                </LinearLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/line"
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:clickable="true"
-                android:onClick="select_line"
-                android:background="?android:attr/selectableItemBackground">
-
-                <ImageView
-                    android:id="@+id/line_icon"
-                    android:layout_width="47dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="32dp"
-                    android:src="@drawable/ic_subway_black_24dp" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/line_icon">
-
-                    <TextView
-                        android:id="@+id/line_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="15dp"
-                        android:text="Line"/>
                 </LinearLayout>
             </RelativeLayout>
 
