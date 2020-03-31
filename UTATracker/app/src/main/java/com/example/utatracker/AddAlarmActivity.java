@@ -1,5 +1,7 @@
 package com.example.utatracker;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.transition.AutoTransition;
@@ -23,7 +25,13 @@ import com.example.utatracker.data.AlarmReminderContract;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
+import ca.antonious.materialdaypicker.MaterialDayPicker;
 
 public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     Button saveButton;
@@ -31,6 +39,7 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
     ConstraintLayout dateExpandable, timeExpandable, notifyExpandable;
     RelativeLayout dateLayout, timeLayout, notifyLayout;
     TimePickerDialog timePicker;
+
 
     private String mDate;
     private String mTime;
@@ -41,6 +50,9 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
     private String mAlertTime;
     private String mActive;
 
+    MaterialDayPicker dayPicker;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +61,7 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
         dateExpandable = findViewById(R.id.dateExpandView);
         dateLayout = findViewById(R.id.date);
         saveButton = findViewById(R.id.saveButton);
+        dayPicker = findViewById(R.id.day_picker);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
               @Override
@@ -57,6 +70,7 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
               }
         });
 
+        // Expandable date selector animation
         dateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,6 +84,16 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
             }
         });
 
+        // Date picker change listener
+        final List[] daysOfTheWeek = new List[0];
+        dayPicker.setDaySelectionChangedListener(new MaterialDayPicker.DaySelectionChangedListener() {
+            @Override
+            public void onDaySelectionChanged(@NonNull List<MaterialDayPicker.Weekday> selectedDays) {
+                // ~~~~~~~~~~~~~~~~~~~~~~ selectedDays contains the days selected from day picker ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                Log.d("hello",String.format("[DaySelectionChangedListener]%s", selectedDays.toString()));
+            }
+        });
+
         timeLayout = findViewById(R.id.time);
         timeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +103,7 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
                         new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        // ~~~~~~~~~~~~~~~~~~~~~~~~~~THIS IS HOW YOU GET THE HOUR (hourOfDay) AND MINUTE (minute) WHEN SELECTED~~~~~~~~~~~~~~~`~
                         Log.d("timePicker", hourOfDay + ":" + minute);
                     }
                 }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
