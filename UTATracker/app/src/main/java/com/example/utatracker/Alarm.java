@@ -25,11 +25,6 @@ public class Alarm {
         mRepeatInfoText = (TextView) view.findViewById(R.id.recycle_repeat_info);
 
 
-        int repeatColumnIndex = AlarmReminderContract.AlarmReminderEntry.KEY_REPEAT;
-        int repeatNoColumnIndex = AlarmReminderContract.AlarmReminderEntry.KEY_REPEAT_NO;
-        int repeatTypeColumnIndex = AlarmReminderContract.AlarmReminderEntry.KEY_REPEAT_TYPE;
-
-
         String date = AlarmReminderContract.AlarmReminderEntry.KEY_DATE;
         String time = AlarmReminderContract.AlarmReminderEntry.KEY_TIME;
         String line = AlarmReminderContract.AlarmReminderEntry.KEY_LINE;

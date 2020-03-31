@@ -50,6 +50,13 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
         dateLayout = findViewById(R.id.date);
         saveButton = findViewById(R.id.saveButton);
 
+        saveButton.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                  startActivity(new Intent(AddAlarmActivity.this, HomeActivity.class));
+              }
+        });
+
         dateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
