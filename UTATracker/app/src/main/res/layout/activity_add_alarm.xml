@@ -60,7 +60,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="15dp"
-                        android:text="Date"/>
+                        android:text="Day of the Week"/>
                 </LinearLayout>
 
             </RelativeLayout>
@@ -74,12 +74,10 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/scrollView">
 
-                <CalendarView
-                    android:id="@+id/calenderView"
+                <ca.antonious.materialdaypicker.MaterialDayPicker
+                    android:id="@+id/day_picker"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
                     app:layout_constraintWidth_percent=".5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"/>
@@ -125,7 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:clickable="true"
-                android:onClick="select_line"
+                android:onClick="selectLine"
                 android:background="?android:attr/selectableItemBackground">
 
                 <ImageView
@@ -155,11 +153,9 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/start_location"
+                android:id="@+id/start_station"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
-                android:clickable="true"
-                android:onClick="selectStartLocation"
                 android:background="?android:attr/selectableItemBackground">
 
                 <ImageView
@@ -184,16 +180,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="15dp"
-                        android:text="Start Location"/>
+                        android:text="Start Station"/>
                 </LinearLayout>
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/end_location"
+                android:id="@+id/end_station"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:clickable="true"
-                android:onClick="setStopLocation"
+                android:onClick="selectStopLocation"
                 android:background="?android:attr/selectableItemBackground">
 
                 <ImageView
@@ -218,7 +214,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="15dp"
-                        android:text="End Location"/>
+                        android:text="End Station"/>
                 </LinearLayout>
             </RelativeLayout>
 
@@ -257,7 +253,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/alertTime"
+                android:id="@+id/alert_time"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:clickable="true"
