@@ -183,6 +183,7 @@ public class LoginActivity extends AppCompatActivity {
         progressBar.setVisibility(View.GONE);
         Toast.makeText(getApplicationContext(), "Login successful!", Toast.LENGTH_LONG).show();
         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+        finish();
     }
 
     private void loginFailed(String toastMessage){

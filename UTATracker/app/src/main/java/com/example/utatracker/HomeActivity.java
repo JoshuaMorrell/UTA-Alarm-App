@@ -26,7 +26,8 @@ import com.google.firebase.auth.FirebaseAuth;
 public class HomeActivity extends AppCompatActivity {
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
     public static final String DEFAULT_ID = "default";
-    FloatingActionButton fab ;
+    FloatingActionButton fab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,32 +37,19 @@ public class HomeActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, AddAlarmActivity.class));
+            startActivity(new Intent(HomeActivity.this, AddAlarmActivity.class));
             }
         });
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_main, menu);
-
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-//        int res_id = item.getItemId();
-//        if(res_id == R.id.logout) {
-//            FirebaseAuth mAuth = FirebaseAuth.getInstance();
-//            mAuth.signOut();
-//
-//            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
         switch (item.getItemId()) {
             case R.id.action_5 :
                 scheduleNotification(getNotification( "5 second delay" ) , 5000 ) ;
@@ -78,13 +66,7 @@ public class HomeActivity extends AppCompatActivity {
                 return super .onOptionsItemSelected(item) ;
         }
     }
-
-
-    @Override
-    public void onBackPressed() {
-        return;
-    }
-
+    
     private void scheduleNotification(Notification notification, int delay) {
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
         notificationIntent.putExtra(NotificationPublisher.CHANNEL_ID , 1 ) ;
