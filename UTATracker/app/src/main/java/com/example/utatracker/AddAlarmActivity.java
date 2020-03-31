@@ -29,6 +29,7 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
     RelativeLayout dateLayout, timeLayout, notifyLayout;
     TimePickerDialog timePicker;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +38,7 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
         dateExpandable = findViewById(R.id.dateExpandView);
         dateLayout = findViewById(R.id.date);
         saveButton = findViewById(R.id.saveButton);
+
 
         saveButton.setOnClickListener(new View.OnClickListener() {
               @Override
