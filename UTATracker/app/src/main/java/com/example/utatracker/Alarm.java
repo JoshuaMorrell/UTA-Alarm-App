@@ -37,8 +37,8 @@ public class Alarm {
         String dateTime = date + " " + time;
 
         setReminderDateTime(dateTime);
-        setReminderRepeatInfo(repeat, repeatNo, repeatType);
-        setActiveImage(active);
+//        setReminderRepeatInfo(line, startStation, endStation, direction);
+//        setActiveImage(active);
 
 
 
@@ -52,13 +52,6 @@ public class Alarm {
         if(title != null && !title.isEmpty()) {
             letter = title.substring(0, 1);
         }
-
-        int color = mColorGenerator.getRandomColor();
-
-        // Create a circular icon consisting of  a random background colour and first letter of title
-        mDrawableBuilder = TextDrawable.builder()
-                .buildRound(letter, color);
-        mThumbnailImage.setImageDrawable(mDrawableBuilder);
     }
 
     public void setReminderDateTime(String datetime) {
