@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,19 +27,25 @@ import com.google.firebase.auth.FirebaseAuth;
 public class HomeActivity extends AppCompatActivity {
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
     public static final String DEFAULT_ID = "default";
+
     FloatingActionButton fab ;
+    ListView alarmView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
         fab = findViewById(R.id.fab);
+        alarmView = findViewById(R.id.list);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(HomeActivity.this, AddAlarmActivity.class));
             }
         });
+        View emptyView = findViewById(R.id.empty_view);
+        alarmView.setEmptyView(emptyView);
     }
 
 
