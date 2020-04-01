@@ -35,19 +35,19 @@ import java.util.ListIterator;
 import ca.antonious.materialdaypicker.MaterialDayPicker;
 
 public class AddAlarmActivity extends AppCompatActivity {
-    String selectedLine;
+    String selectedLine, selectedStartLoc, selectedEndLoc;
     Button saveButton;
 
-    ConstraintLayout dateExpandable, timeExpandable, notifyExpandable, lineExpandable;
+    ConstraintLayout dateExpandable, timeExpandable, notifyExpandable, lineExpandable, startExpandable, endExpandable;
     RelativeLayout dateLayout, timeLayout, notifyLayout, startLayout, endLayout, lineLayout;
     TimePickerDialog timePicker;
 
     MaterialDayPicker dayPicker;
-    NumberPicker linePicker;
+    NumberPicker linePicker, startPicker, endPicker;
 
     String[] lines, redDirection, blueDirection, greenDirection, sDirection, frontDirection;
 
-    List<String> redLineStations, blueLineStations, greenLineStations, sLineStations, frontRunnerStations;
+    String[] redLineStations, blueLineStations, greenLineStations, sLineStations, frontRunnerStations;
 
 
     @Override
@@ -55,7 +55,8 @@ public class AddAlarmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_alarm);
 
-        lines = new String[]{"Red", "Blue", "Green", "S line", "Frontrunner"};
+        lines = new String[]{"Red", "Blue", "Green", "S line", "Front Runner"};
+        selectedLine = "Red";
         redLineStations = getListOfStations("red");
         blueLineStations = getListOfStations("blue");
         greenLineStations = getListOfStations("green");
@@ -66,15 +67,20 @@ public class AddAlarmActivity extends AppCompatActivity {
         dateLayout = findViewById(R.id.date);
         saveButton = findViewById(R.id.saveButton);
         dayPicker = findViewById(R.id.day_picker);
+
         linePicker = findViewById(R.id.linePicker);
-        lineExpandable = findViewById(R.id.lineExpandView);
-        lineLayout = findViewById(R.id.line);
+        startPicker = findViewById(R.id.startPicker);
+        endPicker = findViewById(R.id.endPicker);
 
         // Disable start and end locations until line is chosen
         startLayout = findViewById(R.id.start_location);
         endLayout = findViewById(R.id.end_location);
         startLayout.setEnabled(false);
         endLayout.setEnabled(false);
+        startExpandable = findViewById(R.id.startExpandView);
+        endExpandable = findViewById(R.id.endExpandView);
+        lineExpandable = findViewById(R.id.lineExpandView);
+        lineLayout = findViewById(R.id.line);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
               @Override
@@ -123,11 +129,7 @@ public class AddAlarmActivity extends AppCompatActivity {
             }
         });
 
-        // Line picker populator
-        linePicker.setMinValue(0);
-        linePicker.setMaxValue(lines.length - 1);
-        linePicker.setWrapSelectorWheel(true);
-        linePicker.setDisplayedValues(lines);
+        setUpLinePicker();
 
         // Line Expandable
         lineLayout.setOnClickListener(new View.OnClickListener() {
@@ -143,6 +145,40 @@ public class AddAlarmActivity extends AppCompatActivity {
             }
         });
 
+        startLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (startExpandable.getVisibility() == View.GONE) {
+                    TransitionManager.beginDelayedTransition(startLayout, new AutoTransition());
+                    startExpandable.setVisibility(View.VISIBLE);
+                } else {
+                    TransitionManager.beginDelayedTransition(startLayout, new AutoTransition());
+                    startExpandable.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        // Start and end layout expandable
+        endLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (endExpandable.getVisibility() == View.GONE) {
+                    TransitionManager.beginDelayedTransition(endLayout, new AutoTransition());
+                    endExpandable.setVisibility(View.VISIBLE);
+                } else {
+                    TransitionManager.beginDelayedTransition(endLayout, new AutoTransition());
+                    endExpandable.setVisibility(View.GONE);
+                }
+            }
+        });
+
+    }
+
+    private void setUpLinePicker() {
+        linePicker.setMinValue(0);
+        linePicker.setMaxValue(lines.length - 1);
+        linePicker.setWrapSelectorWheel(true);
+        linePicker.setDisplayedValues(lines);
         linePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -150,6 +186,39 @@ public class AddAlarmActivity extends AppCompatActivity {
                 startLayout.setEnabled(true);
                 endLayout.setEnabled(true);
                 selectedLine = lines[newVal];
+                Log.d("line", selectedLine);
+                setUpSelectedLinePicker(selectedLine);
+            }
+        });
+    }
+
+    private void setUpSelectedLinePicker(final String selectedLine) {
+        Log.d("SELECTED LINE", selectedLine + " " +selectedLine.length());
+        final String[] stations = getStationListFromSelection(selectedLine);
+
+        startPicker.setMinValue(0);
+        startPicker.setMaxValue(stations.length - 1);
+        startPicker.setWrapSelectorWheel(true);
+        startPicker.setDisplayedValues(stations);
+        startPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                Log.d("start", stations[newVal]);
+                selectedStartLoc = stations[newVal];
+
+            }
+        });
+
+        endPicker.setMinValue(0);
+        endPicker.setMaxValue(stations.length - 1);
+        endPicker.setWrapSelectorWheel(true);
+        endPicker.setDisplayedValues(stations);
+        endPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                Log.d("end", stations[newVal]);
+                selectedEndLoc = stations[newVal];
+
             }
         });
 
@@ -160,8 +229,8 @@ public class AddAlarmActivity extends AppCompatActivity {
      * @param line
      * @return
      */
-    private List<String> getListOfStations(String line) {
-        List<String> results = new ArrayList<>();
+    private String[] getListOfStations(String line) {
+        ArrayList<String> results = new ArrayList<>();
 
         Field[] fields = R.string.class.getFields();
         String[] stringNames = new String[fields.length];
@@ -176,7 +245,7 @@ public class AddAlarmActivity extends AppCompatActivity {
             }
         }
 
-        return results;
+        return GetStringArray(results);
     }
 
     private int getResourceId(String pVariableName, String pResourcename, String pPackageName)
@@ -187,5 +256,48 @@ public class AddAlarmActivity extends AppCompatActivity {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    // Function to convert ArrayList<String> to String[]
+    public static String[] GetStringArray(ArrayList<String> arr)
+    {
+
+        // declaration and initialise String Array
+        String str[] = new String[arr.size()];
+
+        // ArrayList to Array Conversion
+        for (int j = 0; j < arr.size(); j++) {
+
+            // Assign each value to String array
+            str[j] = arr.get(j);
+        }
+
+        return str;
+    }
+
+    private String[] getStationListFromSelection(String selectedLine){
+        Log.d("update", "updating selection");
+        final String[] stations;
+        switch (selectedLine) {
+            case "Blue":
+                stations = blueLineStations;
+                break;
+            case "Red":
+                stations = redLineStations;
+                break;
+            case "Green":
+                stations = greenLineStations;
+                break;
+            case "S Line":
+                stations = sLineStations;
+                break;
+            case "Front Runner":
+                stations = frontRunnerStations;
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + selectedLine);
+        }
+
+        return stations;
     }
 }
