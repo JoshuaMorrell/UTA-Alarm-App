@@ -9,12 +9,16 @@ import androidx.transition.TransitionManager;
 
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
@@ -48,14 +52,14 @@ public class AddAlarmActivity extends AppCompatActivity {
     String[] lines, redDirection, blueDirection, greenDirection, sDirection, frontDirection;
 
     String[] redLineStations, blueLineStations, greenLineStations, sLineStations, frontRunnerStations;
-
+    String[] selectedStations;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_alarm);
 
-        lines = new String[]{"Red", "Blue", "Green", "S line", "Front Runner"};
+        lines = new String[]{"Red", "Blue", "Green", "S-Line", "Front Runner"};
         selectedLine = "Red";
         redLineStations = getListOfStations("red");
         blueLineStations = getListOfStations("blue");
@@ -185,40 +189,47 @@ public class AddAlarmActivity extends AppCompatActivity {
                 // Enable start and stop location
                 startLayout.setEnabled(true);
                 endLayout.setEnabled(true);
+                startExpandable.removeView(startPicker);
+                endExpandable.removeView(endPicker);
+
                 selectedLine = lines[newVal];
                 Log.d("line", selectedLine);
+                selectedStations = getStationListFromSelection(selectedLine);
+
+                startPicker = new NumberPicker(getApplicationContext());
+                endPicker = new NumberPicker(getApplicationContext());
                 setUpSelectedLinePicker(selectedLine);
+                setNumberPickerTextColor(startPicker, Color.BLACK);
+                setNumberPickerTextColor(endPicker, Color.BLACK);
+
+                startExpandable.addView(startPicker);
+                endExpandable.addView(endPicker);
             }
         });
     }
 
     private void setUpSelectedLinePicker(final String selectedLine) {
-        Log.d("SELECTED LINE", selectedLine + " " +selectedLine.length());
-        final String[] stations = getStationListFromSelection(selectedLine);
+        Log.d("SELECTED LINE", selectedLine + " " + selectedStations.length);
 
         startPicker.setMinValue(0);
-        startPicker.setMaxValue(stations.length - 1);
+        startPicker.setMaxValue(selectedStations.length - 1);
         startPicker.setWrapSelectorWheel(true);
-        startPicker.setDisplayedValues(stations);
+        startPicker.setDisplayedValues(selectedStations);
         startPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                Log.d("start", stations[newVal]);
-                selectedStartLoc = stations[newVal];
-
+                selectedStartLoc = selectedStations[newVal];
             }
         });
 
         endPicker.setMinValue(0);
-        endPicker.setMaxValue(stations.length - 1);
+        endPicker.setMaxValue(selectedStations.length - 1);
         endPicker.setWrapSelectorWheel(true);
-        endPicker.setDisplayedValues(stations);
+        endPicker.setDisplayedValues(selectedStations);
         endPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                Log.d("end", stations[newVal]);
-                selectedEndLoc = stations[newVal];
-
+                selectedEndLoc = selectedStations[newVal];
             }
         });
 
@@ -288,7 +299,7 @@ public class AddAlarmActivity extends AppCompatActivity {
             case "Green":
                 stations = greenLineStations;
                 break;
-            case "S Line":
+            case "S-Line":
                 stations = sLineStations;
                 break;
             case "Front Runner":
@@ -299,5 +310,34 @@ public class AddAlarmActivity extends AppCompatActivity {
         }
 
         return stations;
+    }
+
+
+    public static void setNumberPickerTextColor(NumberPicker numberPicker, int color)
+    {
+
+        try{
+            Field selectorWheelPaintField = numberPicker.getClass()
+                    .getDeclaredField("mSelectorWheelPaint");
+            selectorWheelPaintField.setAccessible(true);
+            ((Paint)selectorWheelPaintField.get(numberPicker)).setColor(color);
+        }
+        catch(NoSuchFieldException e){
+            Log.w("setNumberPickerTxtColor", e);
+        }
+        catch(IllegalAccessException e){
+            Log.w("setNumberPickerTxtColor", e);
+        }
+        catch(IllegalArgumentException e){
+            Log.w("setNumberPickerTxtColor", e);
+        }
+
+        final int count = numberPicker.getChildCount();
+        for(int i = 0; i < count; i++){
+            View child = numberPicker.getChildAt(i);
+            if(child instanceof EditText)
+                ((EditText)child).setTextColor(color);
+        }
+        numberPicker.invalidate();
     }
 }
