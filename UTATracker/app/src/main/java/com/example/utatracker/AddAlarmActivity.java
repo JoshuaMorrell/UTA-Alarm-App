@@ -9,7 +9,9 @@ import androidx.transition.TransitionManager;
 
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -27,9 +29,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 import ca.antonious.materialdaypicker.MaterialDayPicker;
 
@@ -39,19 +43,8 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
     ConstraintLayout dateExpandable, timeExpandable, notifyExpandable;
     RelativeLayout dateLayout, timeLayout, notifyLayout;
     TimePickerDialog timePicker;
-
-
-    private String mDate;
-    private String mTime;
-    private String mLine;
-    private String mStartStation;
-    private String mEndStation;
-    private String mDirection;
-    private String mAlertTime;
-    private String mActive;
-
     MaterialDayPicker dayPicker;
-
+    SharedPreferences sharedPref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,6 +55,8 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
         dateLayout = findViewById(R.id.date);
         saveButton = findViewById(R.id.saveButton);
         dayPicker = findViewById(R.id.day_picker);
+
+        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
               @Override
@@ -114,17 +109,18 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContentValues values = new ContentValues();
+                if(Alarm.mDate.isEmpty() || Alarm.mTime.isEmpty() || Alarm.mLine.isEmpty() || Alarm.mStartStation.isEmpty() || Alarm.mEndStation.isEmpty() || Alarm.mDirection.isEmpty() || Alarm.mActive.isEmpty()){
+                    Toast.makeText(v.getContext(), "Complete all fields before submitting.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                values.put(AlarmReminderContract.AlarmReminderEntry.KEY_DATE, mDate);
-                values.put(AlarmReminderContract.AlarmReminderEntry.KEY_TIME, mTime);
-                values.put(AlarmReminderContract.AlarmReminderEntry.KEY_LINE, mLine);
-                values.put(AlarmReminderContract.AlarmReminderEntry.KEY_START_STATION, mStartStation);
-                values.put(AlarmReminderContract.AlarmReminderEntry.KEY_END_STATION, mEndStation);
-                values.put(AlarmReminderContract.AlarmReminderEntry.KEY_DIRECTION, mDirection);
-                values.put(AlarmReminderContract.AlarmReminderEntry.KEY_ACTIVE, mActive);
+                Set<String> alarms = sharedPref.getStringSet("alarms", new HashSet<String>());
+                SharedPreferences.Editor editor = sharedPref.edit();
+
+                editor.commit();
 
                 startActivity(new Intent(AddAlarmActivity.this, HomeActivity.class));
+                finish();
             }
         });
     }
