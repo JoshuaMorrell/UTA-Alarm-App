@@ -159,8 +159,11 @@ public class AddAlarmActivity extends AppCompatActivity {
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                     // ~~~~~~~~~~~~~~~~~~~~~~~~~~THIS IS HOW YOU GET THE HOUR (hourOfDay) AND MINUTE (minute) WHEN SELECTED~~~~~~~~~~~~~~~`~
                     Log.d("timePicker", hourOfDay + ":" + minute);
-                   mTime = hourOfDay + ":" + minute;
-                   mTimeText.setText(mTime);
+                    if(minute < 10)
+                        mTime = hourOfDay + ": 0" + minute;
+                    else
+                        mTime = hourOfDay + ":" + minute;
+                    mTimeText.setText(mTime);
                 }
             }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
             timePicker.show();
