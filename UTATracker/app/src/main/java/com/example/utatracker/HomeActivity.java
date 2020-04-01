@@ -107,6 +107,11 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.action_5 :
                 scheduleNotification(getNotification( "5 second delay" ) , 5000 ) ;
                 return true;
+            case R.id.clearPreferences:
+                // -------------------------------------------------------------------------------------------------------------------------------------
+                // -------------------------------- clear shared preferences here ----------------------------------------------------------------------
+                return true;
+
             case R.id.logout:
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
                 mAuth.signOut();
