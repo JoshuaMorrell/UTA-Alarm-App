@@ -19,16 +19,27 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
     public static final String DEFAULT_ID = "default";
     ListView alarmView;
     FloatingActionButton fab;
+
+
+//    List<Alarm> alarms = new List<Alarm>();
+    String[] alarmNames;
+    String[] dates;
+    String[] times;
+    String[] lines;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +49,46 @@ public class HomeActivity extends AppCompatActivity {
         fab = findViewById(R.id.fab);
         alarmView = findViewById(R.id.list);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            startActivity(new Intent(HomeActivity.this, AddAlarmActivity.class));
-            }
-        });
-        View emptyView = findViewById(R.id.empty_view);
-        alarmView.setEmptyView(emptyView);
+        // TODO: Change this to alarms.length
+        if (alarmNames != null && alarmNames.length != 0) {
+            AlarmAdapter adapter = new AlarmAdapter(this, alarmNames, dates, times, lines);
+            alarmView = (ListView) findViewById(R.id.list);
+            alarmView.setAdapter(adapter);
+
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(HomeActivity.this, AddAlarmActivity.class));
+                }
+            });
+            View emptyView = findViewById(R.id.empty_view);
+            alarmView.setEmptyView(emptyView);
+
+            alarmView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    // TODO Auto-generated method stub
+                    if (position == 0) {
+                        //code specific to first list item
+                        Toast.makeText(getApplicationContext(), "Place Your First Option Code", Toast.LENGTH_SHORT).show();
+                    } else if (position == 1) {
+                        //code specific to 2nd list item
+                        Toast.makeText(getApplicationContext(), "Place Your Second Option Code", Toast.LENGTH_SHORT).show();
+                    } else if (position == 2) {
+
+                        Toast.makeText(getApplicationContext(), "Place Your Third Option Code", Toast.LENGTH_SHORT).show();
+                    } else if (position == 3) {
+
+                        Toast.makeText(getApplicationContext(), "Place Your Forth Option Code", Toast.LENGTH_SHORT).show();
+                    } else if (position == 4) {
+
+                        Toast.makeText(getApplicationContext(), "Place Your Fifth Option Code", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
+        }
     }
 
     @Override

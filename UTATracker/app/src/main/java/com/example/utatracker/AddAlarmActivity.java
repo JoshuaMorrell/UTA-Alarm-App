@@ -7,6 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.transition.AutoTransition;
 import androidx.transition.TransitionManager;
 
+import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -18,8 +19,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -41,15 +44,31 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
     Button saveButton;
 
     ConstraintLayout dateExpandable, timeExpandable, notifyExpandable;
+    private TextView mDateText, mTimeText, mRepeatText, mRepeatNoText, mRepeatTypeText;
     RelativeLayout dateLayout, timeLayout, notifyLayout;
     TimePickerDialog timePicker;
+
+//    Calendar mCalendar;
+
+    private String mDate;
+    private String mTime;
+    private String mLine;
+    private String mStartStation;
+    private String mEndStation;
+    private String mDirection;
+    private String mAlertTime;
+    private String mActive;
+//    private int mYear, mMonth, mHour, mMinute, mDay;
+
     MaterialDayPicker dayPicker;
     SharedPreferences sharedPref;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_alarm);
+
 
         dateExpandable = findViewById(R.id.dateExpandView);
         dateLayout = findViewById(R.id.date);
@@ -58,24 +77,30 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
 
         sharedPref = this.getPreferences(Context.MODE_PRIVATE);
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
-                  startActivity(new Intent(AddAlarmActivity.this, HomeActivity.class));
-              }
-        });
+//        mCalendar = Calendar.getInstance();
+//        mHour = mCalendar.get(Calendar.HOUR_OF_DAY);
+//        mMinute = mCalendar.get(Calendar.MINUTE);
+//        mYear = mCalendar.get(Calendar.YEAR);
+//        mMonth = mCalendar.get(Calendar.MONTH) + 1;
+//        mDay = mCalendar.get(Calendar.DATE);
+//
+//        mDate = mDay + "/" + mMonth + "/" + mYear;
+//        mTime = mHour + ":" + mMinute;
+
+        mDateText = findViewById(R.id.date_text);
+        mTimeText = findViewById(R.id.time_text);
 
         // Expandable date selector animation
         dateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (dateExpandable.getVisibility() == View.GONE) {
-                    TransitionManager.beginDelayedTransition(dateLayout, new AutoTransition());
-                    dateExpandable.setVisibility(View.VISIBLE);
-                } else {
-                    TransitionManager.beginDelayedTransition(dateLayout, new AutoTransition());
-                    dateExpandable.setVisibility(View.GONE);
-                }
+            if (dateExpandable.getVisibility() == View.GONE) {
+                TransitionManager.beginDelayedTransition(dateLayout, new AutoTransition());
+                dateExpandable.setVisibility(View.VISIBLE);
+            } else {
+                TransitionManager.beginDelayedTransition(dateLayout, new AutoTransition());
+                dateExpandable.setVisibility(View.GONE);
+            }
             }
         });
 
@@ -84,8 +109,10 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
         dayPicker.setDaySelectionChangedListener(new MaterialDayPicker.DaySelectionChangedListener() {
             @Override
             public void onDaySelectionChanged(@NonNull List<MaterialDayPicker.Weekday> selectedDays) {
-                // ~~~~~~~~~~~~~~~~~~~~~~ selectedDays contains the days selected from day picker ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                Log.d("hello",String.format("[DaySelectionChangedListener]%s", selectedDays.toString()));
+            // ~~~~~~~~~~~~~~~~~~~~~~ selectedDays contains the days selected from day picker ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            Log.d("hello",String.format("[DaySelectionChangedListener]%s", selectedDays.toString()));
+            mDate = selectedDays.toString();
+            mDateText.setText(mDate);
             }
         });
 
@@ -93,34 +120,36 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
         timeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Calendar cal = Calendar.getInstance();
-                timePicker = new TimePickerDialog(AddAlarmActivity.this,
-                        new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        // ~~~~~~~~~~~~~~~~~~~~~~~~~~THIS IS HOW YOU GET THE HOUR (hourOfDay) AND MINUTE (minute) WHEN SELECTED~~~~~~~~~~~~~~~`~
-                        Log.d("timePicker", hourOfDay + ":" + minute);
-                    }
-                }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
-                timePicker.show();
+            final Calendar cal = Calendar.getInstance();
+            timePicker = new TimePickerDialog(AddAlarmActivity.this,
+                    new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    // ~~~~~~~~~~~~~~~~~~~~~~~~~~THIS IS HOW YOU GET THE HOUR (hourOfDay) AND MINUTE (minute) WHEN SELECTED~~~~~~~~~~~~~~~`~
+                    Log.d("timePicker", hourOfDay + ":" + minute);
+                   mTime = hourOfDay + ":" + minute;
+                   mTimeText.setText(mTime);
+                }
+            }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
+            timePicker.show();
             }
         });
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Alarm.mDate.isEmpty() || Alarm.mTime.isEmpty() || Alarm.mLine.isEmpty() || Alarm.mStartStation.isEmpty() || Alarm.mEndStation.isEmpty() || Alarm.mDirection.isEmpty() || Alarm.mActive.isEmpty()){
-                    Toast.makeText(v.getContext(), "Complete all fields before submitting.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+            if(Alarm.mDate.isEmpty() || Alarm.mTime.isEmpty() || Alarm.mLine.isEmpty() || Alarm.mStartStation.isEmpty() || Alarm.mEndStation.isEmpty() || Alarm.mDirection.isEmpty() || Alarm.mActive.isEmpty()){
+                Toast.makeText(v.getContext(), "Complete all fields before submitting.", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-                Set<String> alarms = sharedPref.getStringSet("alarms", new HashSet<String>());
-                SharedPreferences.Editor editor = sharedPref.edit();
+            Set<String> alarms = sharedPref.getStringSet("alarms", new HashSet<String>());
+            SharedPreferences.Editor editor = sharedPref.edit();
 
-                editor.commit();
+            editor.commit();
 
-                startActivity(new Intent(AddAlarmActivity.this, HomeActivity.class));
-                finish();
+            startActivity(new Intent(AddAlarmActivity.this, HomeActivity.class));
+            finish();
             }
         });
     }
