@@ -2,37 +2,28 @@ package com.example.utatracker;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import android.app.AlarmManager;
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ShareActionProvider;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class HomeActivity extends AppCompatActivity {
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
@@ -48,7 +39,7 @@ public class HomeActivity extends AppCompatActivity {
 
         SharedPreferences sharedPref = sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         alarms = new ArrayList<Alarm>();
-        for(String alarm: sharedPref.getStringSet("alarms", new HashSet<String>())){
+        for(String alarm: new HashSet<String>(sharedPref.getStringSet("alarms", new HashSet<String>()))){
             alarms.add(Alarm.fromString(alarm));
         }
 

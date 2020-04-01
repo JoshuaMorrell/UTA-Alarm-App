@@ -177,7 +177,7 @@ public class AddAlarmActivity extends AppCompatActivity {
 
             Alarm alarm = new Alarm(mDate, mTime, selectedLine, selectedStartLoc, selectedEndLoc, selectedDirection);
 
-            Set<String> alarms = sharedPref.getStringSet("alarms", new HashSet<String>());
+            Set<String> alarms = new HashSet<>(sharedPref.getStringSet("alarms", new HashSet<String>()));
             alarms.add(alarm.toString());
 
             SharedPreferences.Editor editor = sharedPref.edit();
