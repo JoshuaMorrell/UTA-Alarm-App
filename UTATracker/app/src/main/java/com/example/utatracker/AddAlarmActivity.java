@@ -7,6 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.transition.AutoTransition;
 import androidx.transition.TransitionManager;
 
+import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -16,8 +17,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -37,10 +40,14 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
     Button saveButton;
 
     ConstraintLayout dateExpandable, timeExpandable, notifyExpandable;
+    private TextView mDateText, mTimeText, mRepeatText, mRepeatNoText, mRepeatTypeText;
     RelativeLayout dateLayout, timeLayout, notifyLayout;
     TimePickerDialog timePicker;
 
 
+
+//    Calendar mCalendar;
+//
     private String mDate;
     private String mTime;
     private String mLine;
@@ -49,8 +56,10 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
     private String mDirection;
     private String mAlertTime;
     private String mActive;
+//    private int mYear, mMonth, mHour, mMinute, mDay;
 
     MaterialDayPicker dayPicker;
+
 
 
     @Override
@@ -58,10 +67,24 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_alarm);
 
+
         dateExpandable = findViewById(R.id.dateExpandView);
         dateLayout = findViewById(R.id.date);
         saveButton = findViewById(R.id.saveButton);
         dayPicker = findViewById(R.id.day_picker);
+
+//        mCalendar = Calendar.getInstance();
+//        mHour = mCalendar.get(Calendar.HOUR_OF_DAY);
+//        mMinute = mCalendar.get(Calendar.MINUTE);
+//        mYear = mCalendar.get(Calendar.YEAR);
+//        mMonth = mCalendar.get(Calendar.MONTH) + 1;
+//        mDay = mCalendar.get(Calendar.DATE);
+//
+//        mDate = mDay + "/" + mMonth + "/" + mYear;
+//        mTime = mHour + ":" + mMinute;
+
+        mDateText = findViewById(R.id.date_text);
+        mTimeText = findViewById(R.id.time_text);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
               @Override
@@ -91,6 +114,8 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
             public void onDaySelectionChanged(@NonNull List<MaterialDayPicker.Weekday> selectedDays) {
                 // ~~~~~~~~~~~~~~~~~~~~~~ selectedDays contains the days selected from day picker ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
                 Log.d("hello",String.format("[DaySelectionChangedListener]%s", selectedDays.toString()));
+                mDate = selectedDays.toString();
+                mDateText.setText(mDate);
             }
         });
 
@@ -105,6 +130,8 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         // ~~~~~~~~~~~~~~~~~~~~~~~~~~THIS IS HOW YOU GET THE HOUR (hourOfDay) AND MINUTE (minute) WHEN SELECTED~~~~~~~~~~~~~~~`~
                         Log.d("timePicker", hourOfDay + ":" + minute);
+                       mTime = hourOfDay + ":" + minute;
+                       mTimeText.setText(mTime);
                     }
                 }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
                 timePicker.show();
@@ -114,15 +141,15 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContentValues values = new ContentValues();
+                Bundle values = new Bundle();
 
-                values.put(AlarmReminderContract.AlarmReminderEntry.KEY_DATE, mDate);
-                values.put(AlarmReminderContract.AlarmReminderEntry.KEY_TIME, mTime);
-                values.put(AlarmReminderContract.AlarmReminderEntry.KEY_LINE, mLine);
-                values.put(AlarmReminderContract.AlarmReminderEntry.KEY_START_STATION, mStartStation);
-                values.put(AlarmReminderContract.AlarmReminderEntry.KEY_END_STATION, mEndStation);
-                values.put(AlarmReminderContract.AlarmReminderEntry.KEY_DIRECTION, mDirection);
-                values.put(AlarmReminderContract.AlarmReminderEntry.KEY_ACTIVE, mActive);
+                values.putString("date", mDate);
+                values.putString("time", mTime);
+                values.putString("line", mLine);
+                values.putString("start_station", mStartStation);
+                values.putString("end_station", mEndStation);
+                values.putString("direction", mDirection);
+                values.putString("active", mActive);
 
                 startActivity(new Intent(AddAlarmActivity.this, HomeActivity.class));
             }
