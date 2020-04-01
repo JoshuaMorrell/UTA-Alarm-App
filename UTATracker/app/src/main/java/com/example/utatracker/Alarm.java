@@ -5,13 +5,13 @@ import androidx.annotation.NonNull;
 import com.google.gson.Gson;
 
 public class Alarm {
-    public static String mDate;
-    public static String mTime;
-    public static String mLine;
-    public static String mStartStation;
-    public static String mEndStation;
-    public static String mDirection;
-    public static String mActive;
+    String mDate;
+    String mTime;
+    String mLine;
+    String mStartStation;
+    String mEndStation;
+    String mDirection;
+    String mActive;
 
     public Alarm(String date, String time, String line, String startStation, String endStation, String direction) {
         this.mDate = date;
@@ -20,7 +20,6 @@ public class Alarm {
         this.mStartStation = startStation;
         this.mEndStation = endStation;
         this.mDirection = direction;
-
     }
     @NonNull
     @Override

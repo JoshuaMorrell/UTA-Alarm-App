@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -77,6 +78,8 @@ public class AddAlarmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_alarm);
 
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
         lines = new String[]{"Red", "Blue", "Green", "S-Line", "Front Runner"};
         selectedLine = "Red";
         redLineStations = getListOfStations("red");
@@ -90,7 +93,6 @@ public class AddAlarmActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.saveButton);
         dayPicker = findViewById(R.id.day_picker);
 
-        sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         linePicker = findViewById(R.id.linePicker);
         startPicker = findViewById(R.id.startPicker);
         endPicker = findViewById(R.id.endPicker);
@@ -158,22 +160,22 @@ public class AddAlarmActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//            if(){
-//                Toast.makeText(v.getContext(), "Complete all fields before submitting.", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
+            if(mDate == null || mTime == null || selectedLine == null || selectedStartLoc == null || selectedEndLoc == null || selectedDirection == null){
+                Toast.makeText(v.getContext(), "Complete all fields before submitting.", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-                Alarm alarm = new Alarm(mDate, mTime, mLine, selectedStartLoc, selectedEndLoc, selectedDirection);
+            Alarm alarm = new Alarm(mDate, mTime, selectedLine, selectedStartLoc, selectedEndLoc, selectedDirection);
 
-                Set<String> alarms = sharedPref.getStringSet("alarms", new HashSet<String>());
-                alarms.add(alarm.toString());
+            Set<String> alarms = sharedPref.getStringSet("alarms", new HashSet<String>());
+            alarms.add(alarm.toString());
 
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putStringSet("alarms", alarms);
-                editor.commit();
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putStringSet("alarms", alarms);
+            editor.commit();
 
-                startActivity(new Intent(AddAlarmActivity.this, HomeActivity.class));
-                finish();
+            startActivity(new Intent(AddAlarmActivity.this, HomeActivity.class));
+            finish();
             }
         });
 

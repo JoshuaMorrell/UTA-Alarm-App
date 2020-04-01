@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,14 +46,13 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         alarms = new ArrayList<Alarm>();
         for(String alarm: sharedPref.getStringSet("alarms", new HashSet<String>())){
             alarms.add(Alarm.fromString(alarm));
         }
 
         fab = findViewById(R.id.fab);
-        alarmView = findViewById(R.id.list);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,30 +66,10 @@ public class HomeActivity extends AppCompatActivity {
             alarmView = (ListView) findViewById(R.id.list);
             alarmView.setAdapter(adapter);
 
-            View emptyView = findViewById(R.id.empty_view);
-            alarmView.setEmptyView(emptyView);
-
             alarmView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO Auto-generated method stub
-                if (position == 0) {
-                    //code specific to first list item
-                    Toast.makeText(getApplicationContext(), "Place Your First Option Code", Toast.LENGTH_SHORT).show();
-                } else if (position == 1) {
-                    //code specific to 2nd list item
-                    Toast.makeText(getApplicationContext(), "Place Your Second Option Code", Toast.LENGTH_SHORT).show();
-                } else if (position == 2) {
 
-                    Toast.makeText(getApplicationContext(), "Place Your Third Option Code", Toast.LENGTH_SHORT).show();
-                } else if (position == 3) {
-
-                    Toast.makeText(getApplicationContext(), "Place Your Forth Option Code", Toast.LENGTH_SHORT).show();
-                } else if (position == 4) {
-
-                    Toast.makeText(getApplicationContext(), "Place Your Fifth Option Code", Toast.LENGTH_SHORT).show();
-                }
                 }
             });
         }
