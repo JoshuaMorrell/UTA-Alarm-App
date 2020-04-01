@@ -2,6 +2,8 @@ package com.example.utatracker;
 
 import androidx.annotation.NonNull;
 
+import com.google.gson.Gson;
+
 public class Alarm {
     public static String mDate;
     public static String mTime;
@@ -11,17 +13,13 @@ public class Alarm {
     public static String mDirection;
     public static String mActive;
 
-    Alarm(){
-
-    }
-
     @NonNull
     @Override
     public String toString() {
-        return super.toString();
+        return new Gson().toJson(this);
     }
 
     public static Alarm fromString(String s) {
-        return null;
+        return new Gson().fromJson(s, Alarm.class);
     }
 }

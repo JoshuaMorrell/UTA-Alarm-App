@@ -42,4 +42,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'ca.antonious:materialdaypicker:0.7.2'
+    implementation 'com.google.code.gson:gson:2.8.6'
 }

@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,9 +38,7 @@ public class HomeActivity extends AppCompatActivity {
     public static final String DEFAULT_ID = "default";
     ListView alarmView;
     FloatingActionButton fab;
-
-
-    HashSet<Alarm> alarms;
+    ArrayList<Alarm> alarms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +46,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        alarms = new HashSet<Alarm>();
+        alarms = new ArrayList<Alarm>();
         for(String alarm: sharedPref.getStringSet("alarms", new HashSet<String>())){
             alarms.add(Alarm.fromString(alarm));
         }
@@ -62,7 +61,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        // TODO: Change this to alarms.length
         if (alarms != null && alarms.size() != 0) {
             AlarmAdapter adapter = new AlarmAdapter(this, alarms);
             alarmView = (ListView) findViewById(R.id.list);
