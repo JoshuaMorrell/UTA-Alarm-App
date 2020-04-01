@@ -17,25 +17,37 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.utatracker.data.AlarmReminderContract;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 
 public class AlarmAdapter extends ArrayAdapter<String> {
     private TextView mTitleText, mDateAndTimeText, mRepeatInfoText;
 
     private final Activity context;
-    private final String[] title;
-    private final String[] dayOfWeek;
-    private final String[] time;
-    private final String[] line;
+    private final ArrayList<String> title;
+    private final ArrayList<String> dayOfWeek;
+    private final ArrayList<String> time;
+    private final ArrayList<String> line;
 
     public AlarmAdapter(@NonNull Activity context, HashSet<Alarm> alarms) {
         super(context, R.layout.train_alarm_item);
 
         this.context = context;
-        this.title = alarmName;
-        this.dayOfWeek = dayOfWeek;
-        this.time = time;
-        this.line = line;
+        title = new ArrayList<String>();
+        dayOfWeek = new ArrayList<String>();
+        time = new ArrayList<String>();
+        line = new ArrayList<String>();
+
+        Iterator<Alarm> it = alarms.iterator();
+        while(it.hasNext()) {
+            Alarm curAlarm = it.next();
+            title.add(curAlarm.mStartStation);
+            dayOfWeek.add(curAlarm.mDate);
+            time.add(curAlarm.mTime);
+            line.add(curAlarm.mLine);
+        }
     }
 
     public View getView(int position,View view,ViewGroup parent) {
@@ -46,17 +58,20 @@ public class AlarmAdapter extends ArrayAdapter<String> {
         TextView subtitleText = rowView.findViewById(R.id.recycle_date_time);
         ImageView trainIcon = rowView.findViewById(R.id.train_icon);
 
-        titleText.setText(title[position]);
-        subtitleText.setText(dayOfWeek[position] + " " + time[position]);
+
+        titleText.setText(title.get(position));
+        subtitleText.setText(dayOfWeek.get(position) + " " + time.get(position));
         int lineColor = R.color.black;
-        if(line[position] == "red")
+        if(line.get(position).equals("Red"))
             lineColor = R.color.redLine;
-        else if(line[position] == "green")
+        else if(line.get(position).equals("Green"))
             lineColor = R.color.greenLine;
-        else if(line[position] == "blue")
+        else if(line.get(position).equals("Blue"))
             lineColor = R.color.blueLine;
-        else if(line[position] == "s")
+        else if(line.get(position).equals("S Line"))
             lineColor = R.color.silverLine;
+        else if(line.get(position).equals("Front Runner"))
+            trainIcon.setImageResource(R.drawable.ic_train_black_24dp);
         trainIcon.setColorFilter(lineColor);
 
         return rowView;

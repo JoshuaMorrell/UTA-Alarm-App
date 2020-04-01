@@ -54,8 +54,6 @@ public class AddAlarmActivity extends AppCompatActivity {
     private String mDate;
     private String mTime;
     private String mLine;
-    private String mStartStation;
-    private String mEndStation;
     private String mDirection;
     private String mAlertTime;
     private String mActive;
@@ -229,6 +227,7 @@ public class AddAlarmActivity extends AppCompatActivity {
             endLayout.setEnabled(true);
             selectedLine = lines[newVal];
             Log.d("line", selectedLine);
+            mLine = selectedLine;
             setUpSelectedLinePicker(selectedLine);
             }
         });

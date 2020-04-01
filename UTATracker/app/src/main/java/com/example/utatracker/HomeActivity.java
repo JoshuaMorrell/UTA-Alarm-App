@@ -62,7 +62,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        // TODO: Change this to alarms.length
         if (alarms != null && alarms.size() != 0) {
             AlarmAdapter adapter = new AlarmAdapter(this, alarms);
             alarmView = (ListView) findViewById(R.id.list);

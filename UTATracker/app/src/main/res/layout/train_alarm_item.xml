@@ -13,7 +13,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_train_black_24dp"/>
+        android:src="@drawable/ic_tram_black_24dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
