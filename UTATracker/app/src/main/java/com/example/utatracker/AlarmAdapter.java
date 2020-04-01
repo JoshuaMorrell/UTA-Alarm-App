@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 
@@ -31,18 +32,19 @@ public class AlarmAdapter extends ArrayAdapter<Alarm> {
 
         titleText.setText(alarm.mStartStation);
         subtitleText.setText(alarm.mDate + " " + alarm.mTime);
-        int lineColor = R.color.black;
+
         if(alarm.mLine.equals("Red"))
-            lineColor = R.color.redLine;
+            trainIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.redLine));
         else if(alarm.mLine.equals("Green"))
-            lineColor = R.color.greenLine;
+            trainIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.greenLine));
         else if(alarm.mLine.equals("Blue"))
-            lineColor = R.color.blueLine;
+            trainIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.blueLine));
         else if(alarm.mLine.equals("S Line"))
-            lineColor = R.color.silverLine;
+            trainIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.silverLine));
         else if(alarm.mLine.equals("Front Runner"))
             trainIcon.setImageResource(R.drawable.ic_train_black_24dp);
-        trainIcon.setColorFilter(lineColor);
+        else
+            trainIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.black));
 
         return view;
     };
