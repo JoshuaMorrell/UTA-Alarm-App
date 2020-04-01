@@ -15,12 +15,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.NumberPicker;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -30,14 +34,20 @@ import java.util.ListIterator;
 
 import ca.antonious.materialdaypicker.MaterialDayPicker;
 
-public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
+public class AddAlarmActivity extends AppCompatActivity {
+    String selectedLine;
     Button saveButton;
 
-    ConstraintLayout dateExpandable, timeExpandable, notifyExpandable;
-    RelativeLayout dateLayout, timeLayout, notifyLayout;
+    ConstraintLayout dateExpandable, timeExpandable, notifyExpandable, lineExpandable;
+    RelativeLayout dateLayout, timeLayout, notifyLayout, startLayout, endLayout, lineLayout;
     TimePickerDialog timePicker;
 
     MaterialDayPicker dayPicker;
+    NumberPicker linePicker;
+
+    String[] lines, redDirection, blueDirection, greenDirection, sDirection, frontDirection;
+
+    List<String> redLineStations, blueLineStations, greenLineStations, sLineStations, frontRunnerStations;
 
 
     @Override
@@ -45,11 +55,26 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_alarm);
 
+        lines = new String[]{"Red", "Blue", "Green", "S line", "Frontrunner"};
+        redLineStations = getListOfStations("red");
+        blueLineStations = getListOfStations("blue");
+        greenLineStations = getListOfStations("green");
+        sLineStations = getListOfStations("sline");
+        frontRunnerStations = getListOfStations("frontrunner");
+
         dateExpandable = findViewById(R.id.dateExpandView);
         dateLayout = findViewById(R.id.date);
         saveButton = findViewById(R.id.saveButton);
         dayPicker = findViewById(R.id.day_picker);
+        linePicker = findViewById(R.id.linePicker);
+        lineExpandable = findViewById(R.id.lineExpandView);
+        lineLayout = findViewById(R.id.line);
 
+        // Disable start and end locations until line is chosen
+        startLayout = findViewById(R.id.start_location);
+        endLayout = findViewById(R.id.end_location);
+        startLayout.setEnabled(false);
+        endLayout.setEnabled(false);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
               @Override
@@ -73,7 +98,6 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
         });
 
         // Date picker change listener
-        final List[] daysOfTheWeek = new List[0];
         dayPicker.setDaySelectionChangedListener(new MaterialDayPicker.DaySelectionChangedListener() {
             @Override
             public void onDaySelectionChanged(@NonNull List<MaterialDayPicker.Weekday> selectedDays) {
@@ -98,29 +122,70 @@ public class AddAlarmActivity extends AppCompatActivity implements PopupMenu.OnM
                 timePicker.show();
             }
         });
+
+        // Line picker populator
+        linePicker.setMinValue(0);
+        linePicker.setMaxValue(lines.length - 1);
+        linePicker.setWrapSelectorWheel(true);
+        linePicker.setDisplayedValues(lines);
+
+        // Line Expandable
+        lineLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (lineExpandable.getVisibility() == View.GONE) {
+                    TransitionManager.beginDelayedTransition(lineLayout, new AutoTransition());
+                    lineExpandable.setVisibility(View.VISIBLE);
+                } else {
+                    TransitionManager.beginDelayedTransition(lineLayout, new AutoTransition());
+                    lineExpandable.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        linePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                // Enable start and stop location
+                startLayout.setEnabled(true);
+                endLayout.setEnabled(true);
+                selectedLine = lines[newVal];
+            }
+        });
+
     }
 
-    public void selectStartLocation(View v) {
-        PopupMenu popupMenu = new PopupMenu(this, v);
-        popupMenu.setOnMenuItemClickListener(this);
-        popupMenu.inflate(R.menu.popup_menu);
-        popupMenu.show();
+    /**
+     * Given a line name, returns a list of station names
+     * @param line
+     * @return
+     */
+    private List<String> getListOfStations(String line) {
+        List<String> results = new ArrayList<>();
+
+        Field[] fields = R.string.class.getFields();
+        String[] stringNames = new String[fields.length];
+        for (int  i = 0; i < fields.length; i++) {
+            stringNames[i] = fields[i].getName();
+        }
+
+        for (String name : stringNames) {
+            if (name.startsWith(line)) {
+                int resID = getResourceId(name, "string", getPackageName());
+                results.add(getString(resID));
+            }
+        }
+
+        return results;
     }
 
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.firstStop:
-                Toast.makeText(this, "FIRST STOP", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.secondStop:
-                Toast.makeText(this, "SECOND STOP", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.thirdStop:
-                Toast.makeText(this, "THIRD STOP", Toast.LENGTH_SHORT).show();
-                return true;
-            default:
-                return false;
+    private int getResourceId(String pVariableName, String pResourcename, String pPackageName)
+    {
+        try {
+            return getResources().getIdentifier(pVariableName, pResourcename, pPackageName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
         }
     }
 }
