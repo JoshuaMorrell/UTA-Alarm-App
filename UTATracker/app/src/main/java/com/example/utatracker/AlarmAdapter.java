@@ -39,10 +39,12 @@ public class AlarmAdapter extends ArrayAdapter<Alarm> {
             trainIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.greenLine));
         else if(alarm.mLine.equals("Blue"))
             trainIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.blueLine));
-        else if(alarm.mLine.equals("S Line"))
+        else if(alarm.mLine.equals("S-Line"))
             trainIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.silverLine));
-        else if(alarm.mLine.equals("Front Runner"))
+        else if(alarm.mLine.equals("Front Runner")) {
+            trainIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.black));
             trainIcon.setImageResource(R.drawable.ic_train_black_24dp);
+        }
         else
             trainIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.black));
 

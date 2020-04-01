@@ -160,7 +160,7 @@ public class AddAlarmActivity extends AppCompatActivity {
                     // ~~~~~~~~~~~~~~~~~~~~~~~~~~THIS IS HOW YOU GET THE HOUR (hourOfDay) AND MINUTE (minute) WHEN SELECTED~~~~~~~~~~~~~~~`~
                     Log.d("timePicker", hourOfDay + ":" + minute);
                     if(minute < 10)
-                        mTime = hourOfDay + ": 0" + minute;
+                        mTime = hourOfDay + ":0" + minute;
                     else
                         mTime = hourOfDay + ":" + minute;
                     mTimeText.setText(mTime);
