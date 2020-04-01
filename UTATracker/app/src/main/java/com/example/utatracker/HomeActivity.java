@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 public class HomeActivity extends AppCompatActivity {
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
@@ -31,13 +32,14 @@ public class HomeActivity extends AppCompatActivity {
     ListView alarmView;
     FloatingActionButton fab;
     ArrayList<Alarm> alarms;
+    SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        SharedPreferences sharedPref = sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        sharedPref = sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         alarms = new ArrayList<Alarm>();
         for(String alarm: new HashSet<String>(sharedPref.getStringSet("alarms", new HashSet<String>()))){
             alarms.add(Alarm.fromString(alarm));
@@ -53,14 +55,21 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         if (alarms != null && alarms.size() != 0) {
-            AlarmAdapter adapter = new AlarmAdapter(this, alarms);
+            final AlarmAdapter adapter = new AlarmAdapter(this, alarms);
             alarmView = (ListView) findViewById(R.id.list);
             alarmView.setAdapter(adapter);
 
             alarmView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                    alarms.remove(position);
+                    adapter.notifyDataSetChanged();
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    Set<String> set = new HashSet<>();
+                    for (Alarm a : alarms)
+                        set.add(a.toString());
+                    editor.putStringSet("alarms", set);
+                    editor.apply();
                 }
             });
         }
@@ -79,8 +88,11 @@ public class HomeActivity extends AppCompatActivity {
                 scheduleNotification(getNotification( "5 second delay" ) , 5000 ) ;
                 return true;
             case R.id.clearPreferences:
-                // -------------------------------------------------------------------------------------------------------------------------------------
-                // -------------------------------- clear shared preferences here ----------------------------------------------------------------------
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.clear();
+                editor.commit();
+                startActivity(new Intent(HomeActivity.this, HomeActivity.class));
+                finish();
                 return true;
 
             case R.id.logout:
