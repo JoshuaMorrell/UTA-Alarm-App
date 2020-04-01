@@ -85,10 +85,10 @@
     <string name="greenline_Fairpark">"Fairpark Station"</string>
     <string name="greenline_Power">"Power Station"</string>
     <string name="greenline_1940WNorthTemple">"1940 W North Temple Station"</string>
-    <string name="greenline_directionofTravel_">"Airport Station"</string>
+    <string name="directionofTravel_greenline_Airport">"Airport Station"</string>
 
     <!-- S-Line Stops (order is sequential and should match stop order to direction of travel)-->
-    <string name="directionofTravel_sline_">"Fairmont Station"</string>
+    <string name="directionofTravel_sline_Fairmont">"Fairmont Station"</string>
     <string name="sline_Sugarmont">"Sugarmont Station"</string>
     <string name="sline_700East">"700 East Station"</string>
     <string name="sline_500East">"500 East Station"</string>
