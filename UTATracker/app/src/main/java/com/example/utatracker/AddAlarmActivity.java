@@ -143,8 +143,15 @@ public class AddAlarmActivity extends AppCompatActivity {
             public void onDaySelectionChanged(@NonNull List<MaterialDayPicker.Weekday> selectedDays) {
             // ~~~~~~~~~~~~~~~~~~~~~~ selectedDays contains the days selected from day picker ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             Log.d("hello",String.format("[DaySelectionChangedListener]%s", selectedDays.toString()));
-            mDate = selectedDays.toString();
-            mDateText.setText(mDate);
+            if(selectedDays.size() > 0){
+                mDate = selectedDays.toString();
+                mDateText.setText(mDate.substring(1,mDate.length()-1));
+            }
+            else {
+                mDate = null;
+                mDateText.setText("Day of the Week");
+            }
+
             }
         });
 
