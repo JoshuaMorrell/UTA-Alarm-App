@@ -11,6 +11,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -21,12 +22,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ShareActionProvider;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class HomeActivity extends AppCompatActivity {
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
@@ -35,16 +39,18 @@ public class HomeActivity extends AppCompatActivity {
     FloatingActionButton fab;
 
 
-//    List<Alarm> alarms = new List<Alarm>();
-    String[] alarmNames;
-    String[] dates;
-    String[] times;
-    String[] lines;
+    HashSet<Alarm> alarms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        alarms = new HashSet<Alarm>();
+        for(String alarm: sharedPref.getStringSet("alarms", new HashSet<String>())){
+            alarms.add(Alarm.fromString(alarm));
+        }
 
         fab = findViewById(R.id.fab);
         alarmView = findViewById(R.id.list);
@@ -57,8 +63,8 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         // TODO: Change this to alarms.length
-        if (alarmNames != null && alarmNames.length != 0) {
-            AlarmAdapter adapter = new AlarmAdapter(this, alarmNames, dates, times, lines);
+        if (alarms != null && alarms.size() != 0) {
+            AlarmAdapter adapter = new AlarmAdapter(this, alarms);
             alarmView = (ListView) findViewById(R.id.list);
             alarmView.setAdapter(adapter);
 

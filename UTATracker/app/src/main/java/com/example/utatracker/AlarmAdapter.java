@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.utatracker.data.AlarmReminderContract;
 
+import java.util.HashSet;
+
 public class AlarmAdapter extends ArrayAdapter<String> {
     private TextView mTitleText, mDateAndTimeText, mRepeatInfoText;
 
@@ -26,7 +28,7 @@ public class AlarmAdapter extends ArrayAdapter<String> {
     private final String[] time;
     private final String[] line;
 
-    public AlarmAdapter(@NonNull Activity context, String[] alarmName, String[] dayOfWeek, String[] time, String[] line) {
+    public AlarmAdapter(@NonNull Activity context, HashSet<Alarm> alarms) {
         super(context, R.layout.train_alarm_item);
 
         this.context = context;

@@ -153,18 +153,21 @@ public class AddAlarmActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            if(Alarm.mDate.isEmpty() || Alarm.mTime.isEmpty() || Alarm.mLine.isEmpty() || Alarm.mStartStation.isEmpty() || Alarm.mEndStation.isEmpty() || Alarm.mDirection.isEmpty() || Alarm.mActive.isEmpty()){
-                Toast.makeText(v.getContext(), "Complete all fields before submitting.", Toast.LENGTH_SHORT).show();
-                return;
-            }
+//            if(){
+//                Toast.makeText(v.getContext(), "Complete all fields before submitting.", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
 
-            Set<String> alarms = sharedPref.getStringSet("alarms", new HashSet<String>());
-            SharedPreferences.Editor editor = sharedPref.edit();
+                Alarm alarm = new Alarm();
 
-            editor.commit();
+                Set<String> alarms = sharedPref.getStringSet("alarms", new HashSet<String>());
+                alarms.add(alarm.toString());
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putStringSet("alarms", alarms);
+                editor.commit();
 
-            startActivity(new Intent(AddAlarmActivity.this, HomeActivity.class));
-            finish();
+                startActivity(new Intent(AddAlarmActivity.this, HomeActivity.class));
+                finish();
             }
         });
 
@@ -221,12 +224,12 @@ public class AddAlarmActivity extends AppCompatActivity {
         linePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                // Enable start and stop location
-                startLayout.setEnabled(true);
-                endLayout.setEnabled(true);
-                selectedLine = lines[newVal];
-                Log.d("line", selectedLine);
-                setUpSelectedLinePicker(selectedLine);
+            // Enable start and stop location
+            startLayout.setEnabled(true);
+            endLayout.setEnabled(true);
+            selectedLine = lines[newVal];
+            Log.d("line", selectedLine);
+            setUpSelectedLinePicker(selectedLine);
             }
         });
     }
@@ -242,9 +245,8 @@ public class AddAlarmActivity extends AppCompatActivity {
         startPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                Log.d("start", stations[newVal]);
-                selectedStartLoc = stations[newVal];
-
+            Log.d("start", stations[newVal]);
+            selectedStartLoc = stations[newVal];
             }
         });
 
@@ -255,9 +257,8 @@ public class AddAlarmActivity extends AppCompatActivity {
         endPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                Log.d("end", stations[newVal]);
-                selectedEndLoc = stations[newVal];
-
+            Log.d("end", stations[newVal]);
+            selectedEndLoc = stations[newVal];
             }
         });
 
