@@ -45,12 +45,15 @@ import java.util.Set;
 import ca.antonious.materialdaypicker.MaterialDayPicker;
 
 public class AddAlarmActivity extends AppCompatActivity {
-    String selectedLine, selectedStartLoc, selectedEndLoc, selectedDirection;
+    String selectedLine, selectedStartLoc, selectedEndLoc, selectedDirection, selectedNotifyTime;
     Button saveButton;
+    TextView lineText, startText, endText, directionText, alertText;
 
     private TextView mDateText, mTimeText, mRepeatText, mRepeatNoText, mRepeatTypeText;
-    ConstraintLayout dateExpandable, timeExpandable, notifyExpandable, lineExpandable, startExpandable, endExpandable, directionExpandable;
-    RelativeLayout dateLayout, timeLayout, notifyLayout, startLayout, endLayout, lineLayout, directionLayout;
+    ConstraintLayout dateExpandable, lineExpandable, startExpandable, endExpandable,
+            directionExpandable, alertExpandable;
+    RelativeLayout dateLayout, timeLayout, startLayout, endLayout, lineLayout,
+            directionLayout, alertLayout;
     TimePickerDialog timePicker;
 
 //    Calendar mCalendar;
@@ -65,12 +68,10 @@ public class AddAlarmActivity extends AppCompatActivity {
 
     MaterialDayPicker dayPicker;
     SharedPreferences sharedPref;
-    NumberPicker linePicker, startPicker, endPicker, directionPicker;
+    NumberPicker linePicker, startPicker, endPicker, directionPicker, alertPicker;
 
-    String[] lines;
-
-    String[] redLineStations, blueLineStations, greenLineStations, sLineStations, frontRunnerStations;
-    String[] selectedStations;
+    String[] lines, redLineStations, blueLineStations, greenLineStations, sLineStations,
+            frontRunnerStations, selectedStations, alertTimes;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,12 +79,19 @@ public class AddAlarmActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_alarm);
 
         lines = new String[]{"Red", "Blue", "Green", "S-Line", "Front Runner"};
+        alertTimes = new String[] {"5 minutes", "10 minutes", "15 minutes", "20 minutes", "30 minutes"};
         selectedLine = "Red";
         redLineStations = getListOfStations("red");
         blueLineStations = getListOfStations("blue");
         greenLineStations = getListOfStations("green");
         sLineStations = getListOfStations("sline");
         frontRunnerStations = getListOfStations("frontrunner");
+
+        lineText = findViewById(R.id.line_text);
+        startText = findViewById(R.id.start_location_text);
+        endText = findViewById(R.id.end_location_text);
+        directionText = findViewById(R.id.direction_text);
+        alertText = findViewById(R.id.alert_text);
 
         dateExpandable = findViewById(R.id.dateExpandView);
         dateLayout = findViewById(R.id.date);
@@ -95,18 +103,20 @@ public class AddAlarmActivity extends AppCompatActivity {
         startPicker = findViewById(R.id.startPicker);
         endPicker = findViewById(R.id.endPicker);
         directionPicker = findViewById(R.id.directionPicker);
+        alertPicker = findViewById(R.id.alertPicker);
 
-        // Disable start and end locations until line is chosen
         startLayout = findViewById(R.id.start_location);
         endLayout = findViewById(R.id.end_location);
-        startLayout.setEnabled(false);
-        endLayout.setEnabled(false);
         startExpandable = findViewById(R.id.startExpandView);
         endExpandable = findViewById(R.id.endExpandView);
         lineExpandable = findViewById(R.id.lineExpandView);
         lineLayout = findViewById(R.id.line);
         directionExpandable = findViewById(R.id.directionExpandView);
         directionLayout = findViewById(R.id.set_direction);
+        alertExpandable = findViewById(R.id.alertExpandView);
+        alertLayout = findViewById(R.id.alert_time);
+
+
 
         mDateText = findViewById(R.id.date_text);
         mTimeText = findViewById(R.id.time_text);
@@ -177,8 +187,16 @@ public class AddAlarmActivity extends AppCompatActivity {
             }
         });
 
-        // Set up line picker
+        // Set up default values
         setUpLinePicker();
+        selectedStations = getStationListFromSelection(selectedLine);
+        selectedStartLoc = selectedStations[0];
+        selectedEndLoc = selectedStations[selectedStations.length - 1];
+        selectedDirection = selectedStations[0];
+        selectedNotifyTime = alertTimes[0];
+        setUpSelectedLinePicker();
+        setUpDirectionPicker();
+        setUpAlertPicker();
 
         // Line Expandable
         lineLayout.setOnClickListener(new View.OnClickListener() {
@@ -236,6 +254,20 @@ public class AddAlarmActivity extends AppCompatActivity {
             }
         });
 
+        // Alert layout expandable
+        alertLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (alertExpandable.getVisibility() == View.GONE) {
+                    TransitionManager.beginDelayedTransition(alertLayout, new AutoTransition());
+                    alertExpandable.setVisibility(View.VISIBLE);
+                } else {
+                    TransitionManager.beginDelayedTransition(alertLayout, new AutoTransition());
+                    alertExpandable.setVisibility(View.GONE);
+                }
+            }
+        });
+
     }
 
     private void setUpLinePicker() {
@@ -246,9 +278,6 @@ public class AddAlarmActivity extends AppCompatActivity {
         linePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                // Enable start and stop location
-                startLayout.setEnabled(true);
-                endLayout.setEnabled(true);
 
                 // Remove previous pickers
                 startExpandable.removeView(startPicker);
@@ -257,6 +286,9 @@ public class AddAlarmActivity extends AppCompatActivity {
 
                 selectedLine = lines[newVal];
                 selectedStations = getStationListFromSelection(selectedLine);
+
+                // Update text view
+                lineText.setText(selectedLine);
 
                 startPicker = new NumberPicker(getApplicationContext());
                 endPicker = new NumberPicker(getApplicationContext());
@@ -285,6 +317,7 @@ public class AddAlarmActivity extends AppCompatActivity {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 selectedStartLoc = selectedStations[newVal];
+                startText.setText(selectedStartLoc);
             }
         });
 
@@ -296,6 +329,7 @@ public class AddAlarmActivity extends AppCompatActivity {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 selectedEndLoc = selectedStations[newVal];
+                endText.setText(selectedEndLoc);
             }
         });
     }
@@ -310,6 +344,21 @@ public class AddAlarmActivity extends AppCompatActivity {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 selectedDirection = direction[newVal];
+                directionText.setText(selectedDirection);
+            }
+        });
+    }
+
+    private void setUpAlertPicker() {
+        alertPicker.setMinValue(0);
+        alertPicker.setMaxValue(alertTimes.length - 1);
+        alertPicker.setWrapSelectorWheel(true);
+        alertPicker.setDisplayedValues(alertTimes);
+        alertPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                selectedNotifyTime = alertTimes[newVal];
+                alertText.setText(selectedNotifyTime);
             }
         });
     }
