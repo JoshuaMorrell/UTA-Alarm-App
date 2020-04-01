@@ -39,17 +39,17 @@ import java.util.ListIterator;
 import ca.antonious.materialdaypicker.MaterialDayPicker;
 
 public class AddAlarmActivity extends AppCompatActivity {
-    String selectedLine, selectedStartLoc, selectedEndLoc;
+    String selectedLine, selectedStartLoc, selectedEndLoc, selectedDirection;
     Button saveButton;
 
-    ConstraintLayout dateExpandable, timeExpandable, notifyExpandable, lineExpandable, startExpandable, endExpandable;
-    RelativeLayout dateLayout, timeLayout, notifyLayout, startLayout, endLayout, lineLayout;
+    ConstraintLayout dateExpandable, timeExpandable, notifyExpandable, lineExpandable, startExpandable, endExpandable, directionExpandable;
+    RelativeLayout dateLayout, timeLayout, notifyLayout, startLayout, endLayout, lineLayout, directionLayout;
     TimePickerDialog timePicker;
 
     MaterialDayPicker dayPicker;
-    NumberPicker linePicker, startPicker, endPicker;
+    NumberPicker linePicker, startPicker, endPicker, directionPicker;
 
-    String[] lines, redDirection, blueDirection, greenDirection, sDirection, frontDirection;
+    String[] lines;
 
     String[] redLineStations, blueLineStations, greenLineStations, sLineStations, frontRunnerStations;
     String[] selectedStations;
@@ -75,6 +75,7 @@ public class AddAlarmActivity extends AppCompatActivity {
         linePicker = findViewById(R.id.linePicker);
         startPicker = findViewById(R.id.startPicker);
         endPicker = findViewById(R.id.endPicker);
+        directionPicker = findViewById(R.id.directionPicker);
 
         // Disable start and end locations until line is chosen
         startLayout = findViewById(R.id.start_location);
@@ -85,6 +86,8 @@ public class AddAlarmActivity extends AppCompatActivity {
         endExpandable = findViewById(R.id.endExpandView);
         lineExpandable = findViewById(R.id.lineExpandView);
         lineLayout = findViewById(R.id.line);
+        directionExpandable = findViewById(R.id.directionExpandView);
+        directionLayout = findViewById(R.id.set_direction);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
               @Override
@@ -133,6 +136,7 @@ public class AddAlarmActivity extends AppCompatActivity {
             }
         });
 
+        // Set up line picker
         setUpLinePicker();
 
         // Line Expandable
@@ -149,6 +153,7 @@ public class AddAlarmActivity extends AppCompatActivity {
             }
         });
 
+        // Start layout expandable
         startLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,7 +167,7 @@ public class AddAlarmActivity extends AppCompatActivity {
             }
         });
 
-        // Start and end layout expandable
+        // End layout expandable
         endLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -172,6 +177,20 @@ public class AddAlarmActivity extends AppCompatActivity {
                 } else {
                     TransitionManager.beginDelayedTransition(endLayout, new AutoTransition());
                     endExpandable.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        // Direction layout expandable
+        directionLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (directionExpandable.getVisibility() == View.GONE) {
+                    TransitionManager.beginDelayedTransition(directionLayout, new AutoTransition());
+                    directionExpandable.setVisibility(View.VISIBLE);
+                } else {
+                    TransitionManager.beginDelayedTransition(directionLayout, new AutoTransition());
+                    directionExpandable.setVisibility(View.GONE);
                 }
             }
         });
@@ -189,28 +208,34 @@ public class AddAlarmActivity extends AppCompatActivity {
                 // Enable start and stop location
                 startLayout.setEnabled(true);
                 endLayout.setEnabled(true);
+
+                // Remove previous pickers
                 startExpandable.removeView(startPicker);
                 endExpandable.removeView(endPicker);
+                directionExpandable.removeView(directionPicker);
 
                 selectedLine = lines[newVal];
-                Log.d("line", selectedLine);
                 selectedStations = getStationListFromSelection(selectedLine);
 
                 startPicker = new NumberPicker(getApplicationContext());
                 endPicker = new NumberPicker(getApplicationContext());
-                setUpSelectedLinePicker(selectedLine);
+                directionPicker = new NumberPicker(getApplicationContext());
+
+                setUpSelectedLinePicker();
+                setUpDirectionPicker();
+
                 setNumberPickerTextColor(startPicker, Color.BLACK);
                 setNumberPickerTextColor(endPicker, Color.BLACK);
+                setNumberPickerTextColor(directionPicker, Color.BLACK);
 
                 startExpandable.addView(startPicker);
                 endExpandable.addView(endPicker);
+                directionExpandable.addView(directionPicker);
             }
         });
     }
 
-    private void setUpSelectedLinePicker(final String selectedLine) {
-        Log.d("SELECTED LINE", selectedLine + " " + selectedStations.length);
-
+    private void setUpSelectedLinePicker() {
         startPicker.setMinValue(0);
         startPicker.setMaxValue(selectedStations.length - 1);
         startPicker.setWrapSelectorWheel(true);
@@ -232,7 +257,55 @@ public class AddAlarmActivity extends AppCompatActivity {
                 selectedEndLoc = selectedStations[newVal];
             }
         });
+    }
 
+    private void setUpDirectionPicker() {
+        final String[] direction = getDirectionArray();
+        directionPicker.setMinValue(0);
+        directionPicker.setMaxValue(direction.length - 1);
+        directionPicker.setWrapSelectorWheel(true);
+        directionPicker.setDisplayedValues(direction);
+        directionPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                selectedDirection = direction[newVal];
+            }
+        });
+    }
+
+    private String[] getDirectionArray() {
+        final String[] direction;
+        switch (selectedLine) {
+            case "Blue":
+                direction = new String[]{
+                        getString(R.string.directionOfTravel_blueline_Draper),
+                        getString(R.string.directionOfTravel_blueline_SaltLakeCt)};
+                break;
+            case "Red":
+                direction = new String[]{
+                        getString(R.string.directionofTravel_redline_Daybreak),
+                        getString(R.string.directionofTravel_redline_Medical)};
+                break;
+            case "Green":
+                direction = new String[]{
+                        getString(R.string.directionofTravel_greenline_WestValley),
+                        getString(R.string.directionofTravel_greenline_Airport)};
+                break;
+            case "S-Line":
+                direction = new String[]{
+                        getString(R.string.directionofTravel_sline_Fairmont),
+                        getString(R.string.directionofTravel_sline_CentralPointe)};
+                break;
+            case "Front Runner":
+                direction = new String[]{
+                        getString(R.string.directionOfTravel_frontrunner_OgdenNB),
+                        getString(R.string.directionOfTravel_frontrunner_ProvoCentralSB)};
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + selectedLine);
+        }
+
+        return direction;
     }
 
     /**
@@ -250,7 +323,7 @@ public class AddAlarmActivity extends AppCompatActivity {
         }
 
         for (String name : stringNames) {
-            if (name.startsWith(line)) {
+            if (name.contains(line)) {
                 int resID = getResourceId(name, "string", getPackageName());
                 results.add(getString(resID));
             }
@@ -287,7 +360,6 @@ public class AddAlarmActivity extends AppCompatActivity {
     }
 
     private String[] getStationListFromSelection(String selectedLine){
-        Log.d("update", "updating selection");
         final String[] stations;
         switch (selectedLine) {
             case "Blue":

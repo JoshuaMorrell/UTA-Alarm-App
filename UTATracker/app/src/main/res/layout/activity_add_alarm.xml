@@ -317,6 +317,27 @@
                 </LinearLayout>
             </RelativeLayout>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/directionExpandView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                app:layout_constraintTop_toBottomOf="@id/date"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/scrollView">
+
+                <NumberPicker
+                    android:id="@+id/directionPicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintWidth_percent=".5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <RelativeLayout
                 android:id="@+id/alertTime"
                 android:layout_width="match_parent"
