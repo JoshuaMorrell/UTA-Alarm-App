@@ -10,6 +10,10 @@
         android:id = "@+id/action_5"
         app:showAsAction = "never"
         android:title = "5 seconds" />
+    <item
+        android:id = "@+id/clearPreferences"
+        app:showAsAction = "never"
+        android:title = "Clear Preferences" />
 
     <item android:id="@+id/logout"
         android:title="Logout"
