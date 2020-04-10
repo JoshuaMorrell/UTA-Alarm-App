@@ -23,6 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,6 +39,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        scheduleNotification();
 
         sharedPref = sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         alarms = new ArrayList<Alarm>();
@@ -85,6 +87,7 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_5 :
+
                 scheduleNotification(getNotification( "5 second delay" ) , 5000 ) ;
                 return true;
             case R.id.clearPreferences:
@@ -106,6 +109,21 @@ public class HomeActivity extends AppCompatActivity {
             default :
                 return super .onOptionsItemSelected(item) ;
         }
+    }
+
+    private void scheduleNotification() {
+        Calendar calendar = Calendar.getInstance();
+
+//        calendar.set(Calendar.DAY_OF_WEEK, )
+        calendar.set(Calendar.HOUR_OF_DAY, 19);
+        calendar.set(Calendar.MINUTE, 43);
+
+
+        Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
     
     private void scheduleNotification(Notification notification, int delay) {
