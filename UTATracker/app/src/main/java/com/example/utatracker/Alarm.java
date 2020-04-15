@@ -11,15 +11,16 @@ public class Alarm {
     String mStartStation;
     String mEndStation;
     String mDirection;
-    String mActive;
+    String mEnabled;
 
-    public Alarm(String date, String time, String line, String startStation, String endStation, String direction) {
+    public Alarm(String date, String time, String line, String startStation, String endStation, String direction,String enabled) {
         this.mDate = date;
         this.mTime = time;
         this.mLine = line;
         this.mStartStation = startStation;
         this.mEndStation = endStation;
         this.mDirection = direction;
+        this.mEnabled = enabled;
     }
     @NonNull
     @Override

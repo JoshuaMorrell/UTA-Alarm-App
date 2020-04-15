@@ -8,6 +8,8 @@ import androidx.transition.AutoTransition;
 import androidx.transition.TransitionManager;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
@@ -23,10 +25,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -48,6 +52,7 @@ import ca.antonious.materialdaypicker.MaterialDayPicker;
 public class AddAlarmActivity extends AppCompatActivity {
     String selectedLine, selectedStartLoc, selectedEndLoc, selectedDirection, selectedNotifyTime;
     Button saveButton;
+    Switch enabled;
     TextView lineText, startText, endText, directionText, alertText;
 
     private TextView mDateText, mTimeText, mRepeatText, mRepeatNoText, mRepeatTypeText;
@@ -61,15 +66,14 @@ public class AddAlarmActivity extends AppCompatActivity {
 
     private String mDate;
     private String mTime;
-    private String mLine;
-    private String mDirection;
-    private String mAlertTime;
-    private String mActive;
-//    private int mYear, mMonth, mHour, mMinute, mDay;
+    private int alarmHour;
+    private int alarmMinute;
+    private List<MaterialDayPicker.Weekday> alarmDates;
 
     MaterialDayPicker dayPicker;
     SharedPreferences sharedPref;
     NumberPicker linePicker, startPicker, endPicker, directionPicker, alertPicker;
+
 
     String[] lines, redLineStations, blueLineStations, greenLineStations, sLineStations,
             frontRunnerStations, selectedStations, alertTimes;
@@ -100,6 +104,7 @@ public class AddAlarmActivity extends AppCompatActivity {
         dateLayout = findViewById(R.id.date);
         saveButton = findViewById(R.id.saveButton);
         dayPicker = findViewById(R.id.day_picker);
+        enabled = findViewById(R.id.enabledSwitch);
 
         linePicker = findViewById(R.id.linePicker);
         startPicker = findViewById(R.id.startPicker);
@@ -144,6 +149,7 @@ public class AddAlarmActivity extends AppCompatActivity {
             // ~~~~~~~~~~~~~~~~~~~~~~ selectedDays contains the days selected from day picker ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             Log.d("hello",String.format("[DaySelectionChangedListener]%s", selectedDays.toString()));
             if(selectedDays.size() > 0){
+                alarmDates = selectedDays;
                 mDate = selectedDays.toString();
                 mDateText.setText(mDate.substring(1,mDate.length()-1));
             }
@@ -170,6 +176,8 @@ public class AddAlarmActivity extends AppCompatActivity {
                         mTime = hourOfDay + ":0" + minute;
                     else
                         mTime = hourOfDay + ":" + minute;
+                    alarmHour = hourOfDay;
+                    alarmMinute = minute;
                     mTimeText.setText(mTime);
                 }
             }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
@@ -185,7 +193,7 @@ public class AddAlarmActivity extends AppCompatActivity {
                 return;
             }
 
-            Alarm alarm = new Alarm(mDate, mTime, selectedLine, selectedStartLoc, selectedEndLoc, selectedDirection);
+            Alarm alarm = new Alarm(mDate, mTime, selectedLine, selectedStartLoc, selectedEndLoc, selectedDirection,"true");
 
             Set<String> alarms = new HashSet<>(sharedPref.getStringSet("alarms", new HashSet<String>()));
             alarms.add(alarm.toString());
@@ -193,6 +201,8 @@ public class AddAlarmActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putStringSet("alarms", alarms);
             editor.commit();
+
+            scheduleNotification(alarmHour, alarmMinute, alarmDates);
 
             startActivity(new Intent(AddAlarmActivity.this, HomeActivity.class));
             finish();
@@ -280,6 +290,50 @@ public class AddAlarmActivity extends AppCompatActivity {
             }
         });
 
+    }
+    private void scheduleNotification(int hour, int minute, List<MaterialDayPicker.Weekday> dates) {
+        Calendar calendar = Calendar.getInstance();
+        int dow = 0;
+
+        for(MaterialDayPicker.Weekday day : dates) {
+            switch(day.toString())
+            {
+                case "SUNDAY":
+                    dow = 1;
+                    break;
+                case "MONDAY":
+                    dow = 2;
+                    break;
+                case "TUESDAY":
+                    dow = 3;
+                    break;
+                case "WEDNESDAY":
+                    dow = 4;
+                    break;
+                case "THURSDAY":
+                    dow = 5;
+                    break;
+                case "FRIDAY":
+                    dow = 6;
+                    break;
+                case "SATURDAY":
+                    dow = 7;
+                    break;
+                default:
+                    break;
+            }
+            calendar.set(Calendar.DAY_OF_WEEK, dow);
+            calendar.set(Calendar.HOUR_OF_DAY, hour);
+            calendar.set(Calendar.MINUTE, minute);
+        }
+
+
+
+        Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
     private void setUpLinePicker() {

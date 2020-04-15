@@ -17,7 +17,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,12 +37,13 @@ public class HomeActivity extends AppCompatActivity {
     FloatingActionButton fab;
     ArrayList<Alarm> alarms;
     SharedPreferences sharedPref;
+    Switch enabled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        scheduleNotification();
+
 
         sharedPref = sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         alarms = new ArrayList<Alarm>();
@@ -72,9 +76,15 @@ public class HomeActivity extends AppCompatActivity {
                         set.add(a.toString());
                     editor.putStringSet("alarms", set);
                     editor.apply();
+
+
                 }
             });
         }
+
+
+
+
     }
 
     @Override
@@ -111,20 +121,7 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    private void scheduleNotification() {
-        Calendar calendar = Calendar.getInstance();
 
-//        calendar.set(Calendar.DAY_OF_WEEK, )
-        calendar.set(Calendar.HOUR_OF_DAY, 19);
-        calendar.set(Calendar.MINUTE, 43);
-
-
-        Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-    }
     
     private void scheduleNotification(Notification notification, int delay) {
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
