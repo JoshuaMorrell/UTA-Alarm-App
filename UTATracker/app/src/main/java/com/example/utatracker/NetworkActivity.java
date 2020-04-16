@@ -22,8 +22,8 @@ public class NetworkActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_network);
-        String str = "http://api.rideuta.com/SIRI/SIRI.svc/VehicleMonitor/ByRoute?route=2&onwardcalls=false&usertoken=UUB2O040NV0";
+        //setContentView(R.layout.activity_network);
+        String str = "http://api.rideuta.com/SIRI/SIRI.svc/VehicleMonitor/ByRoute?route=703&onwardcalls=false&usertoken=UUB2O040NV0";
         new DownloadXmlTask().execute(str);
 
     }
@@ -34,6 +34,7 @@ public class NetworkActivity extends AppCompatActivity {
      * Output List: Returns a list of the requested API information
      */
     private class DownloadXmlTask extends AsyncTask<String, Void, List> {
+
         @Override
         protected List doInBackground(String... urls) {
             List<UTATraxXMLParser.MonitoredVehicleByRoute> toReturn = new ArrayList();
@@ -46,6 +47,11 @@ public class NetworkActivity extends AppCompatActivity {
             } catch (XmlPullParserException e) {
                 return toReturn;
             }
+        }
+
+        @Override
+        protected void onPostExecute(List result) {
+
         }
 
     }
