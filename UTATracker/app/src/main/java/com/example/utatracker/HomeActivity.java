@@ -1,7 +1,10 @@
 package com.example.utatracker;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.NotificationCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -9,6 +12,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -38,12 +44,13 @@ public class HomeActivity extends AppCompatActivity {
     ArrayList<Alarm> alarms;
     SharedPreferences sharedPref;
     Switch enabled;
+    boolean deleteEnabled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        deleteEnabled = false;
 
         sharedPref = sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         alarms = new ArrayList<Alarm>();
@@ -68,16 +75,20 @@ public class HomeActivity extends AppCompatActivity {
             alarmView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    alarms.remove(position);
-                    adapter.notifyDataSetChanged();
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    Set<String> set = new HashSet<>();
-                    for (Alarm a : alarms)
-                        set.add(a.toString());
-                    editor.putStringSet("alarms", set);
-                    editor.apply();
-
-
+                    if (deleteEnabled) {
+                        // Delete alarm
+                        alarms.remove(position);
+                        adapter.notifyDataSetChanged();
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        Set<String> set = new HashSet<>();
+                        for (Alarm a : alarms)
+                            set.add(a.toString());
+                        editor.putStringSet("alarms", set);
+                        editor.apply();
+                    }
+                    else {
+                        // Edit alarm
+                    }
                 }
             });
         }
@@ -93,12 +104,27 @@ public class HomeActivity extends AppCompatActivity {
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_5 :
+//            case R.id.action_5 :
+//
+//                scheduleNotification(getNotification( "5 second delay" ) , 5000 ) ;
+//                return true;
+            case R.id.setDelete:
+                Drawable icon = getDrawable(R.drawable.ic_delete_black_24dp);
+                if (deleteEnabled) {
+                    deleteEnabled = false;
+                    icon.setTint(Color.BLACK);
+                    item.setIcon(icon);
+                }
+                else {
+                    deleteEnabled = true;
+                    icon.setTint(getResources().getColor(R.color.colorAccent));
+                    item.setIcon(icon);
+                }
 
-                scheduleNotification(getNotification( "5 second delay" ) , 5000 ) ;
                 return true;
             case R.id.clearPreferences:
                 SharedPreferences.Editor editor = sharedPref.edit();

@@ -166,7 +166,7 @@ public class AddAlarmActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
             final Calendar cal = Calendar.getInstance();
-            timePicker = new TimePickerDialog(AddAlarmActivity.this,
+            timePicker = new TimePickerDialog(AddAlarmActivity.this, R.style.TimePickerTheme,
                     new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -180,7 +180,8 @@ public class AddAlarmActivity extends AppCompatActivity {
                     alarmMinute = minute;
                     mTimeText.setText(mTime);
                 }
-            }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
+            },cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
+
             timePicker.show();
             }
         });
