@@ -122,7 +122,6 @@ public class AddAlarmActivity extends AppCompatActivity {
         dateLayout = findViewById(R.id.date);
         saveButton = findViewById(R.id.saveButton);
         dayPicker = findViewById(R.id.day_picker);
-        enabled = findViewById(R.id.enabledSwitch);
 
         linePicker = findViewById(R.id.linePicker);
         startPicker = findViewById(R.id.startPicker);
