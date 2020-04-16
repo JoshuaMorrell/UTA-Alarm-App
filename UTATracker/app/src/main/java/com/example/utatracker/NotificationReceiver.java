@@ -15,9 +15,10 @@ public class NotificationReceiver extends BroadcastReceiver {
 
 //        Intent repeatingIntent = new Intent(context, RepeatingActivity.class);
 //        repeatingIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        String alarmTime = intent.getExtras().getString("alarmTime");
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context).setContentIntent(pendingIntent).setSmallIcon(R.drawable.ic_add_alert_black_24dp).setContentTitle("LY'S NOTIFICATION").setContentText("HEY YOU DID THE DO").setAutoCancel(true);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context).setContentIntent(pendingIntent).setSmallIcon(R.drawable.ic_add_alert_black_24dp).setContentTitle("TIME TO LEAVE").setContentText("ALARM TIME: " + alarmTime).setAutoCancel(true);
 
         notificationManager.notify(1, builder.build());
     }

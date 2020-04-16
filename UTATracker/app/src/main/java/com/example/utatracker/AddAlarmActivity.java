@@ -327,10 +327,17 @@ public class AddAlarmActivity extends AppCompatActivity {
             calendar.set(Calendar.MINUTE, minute);
         }
 
-
+        Bundle alarmInfo = new Bundle();
+        String min = Integer.toString(minute);
+        if(minute < 10) {
+            min = "0" + min;
+        }
+        alarmInfo.putString("alarmTime", hour + ":" + min);
 
         Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
+        intent.putExtras(alarmInfo);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
