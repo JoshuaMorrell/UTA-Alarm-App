@@ -28,8 +28,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Collection;
 
 public class HomeActivity extends AppCompatActivity {
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
@@ -40,6 +42,7 @@ public class HomeActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
     boolean deleteEnabled;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,17 +76,25 @@ public class HomeActivity extends AppCompatActivity {
                     mAdapter.alarms.remove(position);
                     mAdapter.notifyItemRemoved(position);
                     mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
+                    for (int i = 0; i < alarms.size(); i++) {
+                        Alarm a = alarms.get(i);
+                        a.id = i;
+                        alarms.set(i, a);
+                    }
                     SharedPreferences.Editor editor = sharedPref.edit();
                     Set<String> set = new HashSet<>();
                     for (Alarm a : alarms)
                         set.add(a.toString());
                     editor.putStringSet("alarms", set);
-                    editor.apply();
+                    editor.commit();
                 }
 
                 @Override
                 public void onLeftClicked(int position) {
-                    super.onLeftClicked(position);
+                    Intent intent = new Intent(getBaseContext(), AddAlarmActivity.class);
+                    intent.putExtra("EXTRA_ALARM_ID", alarms.get(position).id);
+                    startActivity(intent);
+                    finish();
                 }
             });
 

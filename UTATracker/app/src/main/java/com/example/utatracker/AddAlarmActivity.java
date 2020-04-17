@@ -94,11 +94,15 @@ public class AddAlarmActivity extends AppCompatActivity {
     String[] lines, redLineStations, blueLineStations, greenLineStations, sLineStations,
             frontRunnerStations, selectedStations, alertTimes;
 
+    private boolean edit;
+    private int alarm_id;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_alarm);
+        alarm_id = getIntent().getIntExtra("EXTRA_ALARM_ID", -1);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -210,11 +214,20 @@ public class AddAlarmActivity extends AppCompatActivity {
                 Toast.makeText(v.getContext(), "Complete all fields before submitting.", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            Alarm alarm = new Alarm(mDate, mTime, selectedLine, selectedStartLoc, selectedEndLoc, selectedDirection,"true");
-
             Set<String> alarms = new HashSet<>(sharedPref.getStringSet("alarms", new HashSet<String>()));
-            alarms.add(alarm.toString());
+            if(edit){
+                for(String a: alarms){
+                    if(Alarm.fromString(a).id == alarm_id){
+                        alarms.remove(a);
+                        Alarm alarm = new Alarm(mDate, mTime, selectedLine, selectedStartLoc, selectedEndLoc, selectedDirection,"true", alarm_id);
+                        alarms.add(alarm.toString());
+                    }
+                }
+            }
+            else{
+                Alarm alarm = new Alarm(mDate, mTime, selectedLine, selectedStartLoc, selectedEndLoc, selectedDirection,"true", alarms.size());
+                alarms.add(alarm.toString());
+            }
 
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putStringSet("alarms", alarms);
@@ -308,7 +321,23 @@ public class AddAlarmActivity extends AppCompatActivity {
             }
         });
 
+        edit = editAlarm(alarm_id);
     }
+
+    private boolean editAlarm(int position){
+        if(position == -1)
+            return false;
+        else{
+            Set<String> alarms = new HashSet<>(sharedPref.getStringSet("alarms", new HashSet<String>()));
+            for(String a: alarms){
+                if(Alarm.fromString(a).id == alarm_id){
+//                    lineText.setText(Alarm.fromString(a).mLine);
+                }
+            }
+            return true;
+        }
+    }
+
     private void scheduleNotification(int hour, int minute, List<MaterialDayPicker.Weekday> dates,String line) {
         Calendar calendar = Calendar.getInstance();
         int dow = 0;

@@ -12,8 +12,9 @@ public class Alarm {
     String mEndStation;
     String mDirection;
     String mEnabled;
+    int id;
 
-    public Alarm(String date, String time, String line, String startStation, String endStation, String direction,String enabled) {
+    public Alarm(String date, String time, String line, String startStation, String endStation, String direction, String enabled, int id) {
         this.mDate = date;
         this.mTime = time;
         this.mLine = line;
@@ -21,6 +22,7 @@ public class Alarm {
         this.mEndStation = endStation;
         this.mDirection = direction;
         this.mEnabled = enabled;
+        this.id = id;
     }
     @NonNull
     @Override
