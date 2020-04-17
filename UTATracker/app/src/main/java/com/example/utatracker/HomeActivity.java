@@ -1,10 +1,9 @@
 package com.example.utatracker;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.NotificationCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,17 +25,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -101,7 +96,7 @@ public class HomeActivity extends AppCompatActivity {
 
             recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
                 @Override
-                public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                     swipe.onDraw(c);
                 }
             });
@@ -131,11 +126,13 @@ public class HomeActivity extends AppCompatActivity {
                 Drawable icon = getDrawable(R.drawable.ic_delete_black_24dp);
                 if (deleteEnabled) {
                     deleteEnabled = false;
+                    assert icon != null;
                     icon.setTint(Color.BLACK);
                     item.setIcon(icon);
                 }
                 else {
                     deleteEnabled = true;
+                    assert icon != null;
                     icon.setTint(getResources().getColor(R.color.colorAccent));
                     item.setIcon(icon);
                 }
@@ -144,7 +141,7 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.clearPreferences:
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.clear();
-                editor.commit();
+                editor.apply();
                 startActivity(new Intent(HomeActivity.this, HomeActivity.class));
                 finish();
                 return true;

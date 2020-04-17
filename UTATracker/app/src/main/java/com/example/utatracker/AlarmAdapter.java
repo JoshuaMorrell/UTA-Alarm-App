@@ -6,19 +6,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
-    public ArrayList<Alarm> alarms;
+    ArrayList<Alarm> alarms;
 
-    public class AlarmViewHolder extends RecyclerView.ViewHolder {
+    static class AlarmViewHolder extends RecyclerView.ViewHolder {
         private TextView titleText, subtitleText, mLine, mStartStation, mEndStation, mDirection, mEnabled;
         private ImageView trainIcon;
 
-        public AlarmViewHolder(View view) {
+        AlarmViewHolder(View view) {
             super(view);
             titleText = view.findViewById(R.id.recycle_title);
             subtitleText = view.findViewById(R.id.recycle_date_time);
@@ -26,10 +27,11 @@ class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
         }
     }
 
-    public AlarmAdapter(ArrayList<Alarm> alarms) {
+    AlarmAdapter(ArrayList<Alarm> alarms) {
         this.alarms = alarms;
     }
 
+    @NonNull
     @Override
     public AlarmViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
@@ -45,20 +47,27 @@ class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
         holder.subtitleText.setText(alarm.mDate + " " + alarm.mTime);
         holder.trainIcon.setImageResource(R.drawable.ic_tram_black_24dp);
 
-        if(alarm.mLine.equals("Red"))
-            holder.trainIcon.setColorFilter(ContextCompat.getColor(holder.trainIcon.getContext(), R.color.redLine));
-        else if(alarm.mLine.equals("Green"))
-            holder.trainIcon.setColorFilter(ContextCompat.getColor(holder.trainIcon.getContext(), R.color.greenLine));
-        else if(alarm.mLine.equals("Blue"))
-            holder.trainIcon.setColorFilter(ContextCompat.getColor(holder.trainIcon.getContext(), R.color.blueLine));
-        else if(alarm.mLine.equals("S-Line"))
-            holder.trainIcon.setColorFilter(ContextCompat.getColor(holder.trainIcon.getContext(), R.color.silverLine));
-        else if(alarm.mLine.equals("Front Runner")) {
-            holder.trainIcon.setColorFilter(ContextCompat.getColor(holder.trainIcon.getContext(), R.color.black));
-            holder.trainIcon.setImageResource(R.drawable.ic_train_black_24dp);
+        switch (alarm.mLine) {
+            case "Red":
+                holder.trainIcon.setColorFilter(ContextCompat.getColor(holder.trainIcon.getContext(), R.color.redLine));
+                break;
+            case "Green":
+                holder.trainIcon.setColorFilter(ContextCompat.getColor(holder.trainIcon.getContext(), R.color.greenLine));
+                break;
+            case "Blue":
+                holder.trainIcon.setColorFilter(ContextCompat.getColor(holder.trainIcon.getContext(), R.color.blueLine));
+                break;
+            case "S-Line":
+                holder.trainIcon.setColorFilter(ContextCompat.getColor(holder.trainIcon.getContext(), R.color.silverLine));
+                break;
+            case "Front Runner":
+                holder.trainIcon.setColorFilter(ContextCompat.getColor(holder.trainIcon.getContext(), R.color.black));
+                holder.trainIcon.setImageResource(R.drawable.ic_train_black_24dp);
+                break;
+            default:
+                holder.trainIcon.setColorFilter(ContextCompat.getColor(holder.trainIcon.getContext(), R.color.black));
+                break;
         }
-        else
-            holder.trainIcon.setColorFilter(ContextCompat.getColor(holder.trainIcon.getContext(), R.color.black));
     }
 
     @Override
