@@ -118,26 +118,6 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.action_5 :
-//
-//                scheduleNotification(getNotification( "5 second delay" ) , 5000 ) ;
-//                return true;
-            case R.id.setDelete:
-                Drawable icon = getDrawable(R.drawable.ic_delete_black_24dp);
-                if (deleteEnabled) {
-                    deleteEnabled = false;
-                    assert icon != null;
-                    icon.setTint(Color.BLACK);
-                    item.setIcon(icon);
-                }
-                else {
-                    deleteEnabled = true;
-                    assert icon != null;
-                    icon.setTint(getResources().getColor(R.color.colorAccent));
-                    item.setIcon(icon);
-                }
-
-                return true;
             case R.id.clearPreferences:
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.clear();
