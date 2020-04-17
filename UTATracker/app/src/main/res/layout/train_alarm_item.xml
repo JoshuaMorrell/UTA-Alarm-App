@@ -24,14 +24,6 @@
         android:layout_toRightOf="@id/train_icon"
         android:orientation="vertical">
 
-
-        <Switch
-            android:id="@+id/enabledSwitch"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:checked="true"
-            />
-
         <TextView
             android:id="@+id/recycle_title"
             android:layout_width="match_parent"
