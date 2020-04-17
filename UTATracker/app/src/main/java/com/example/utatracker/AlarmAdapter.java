@@ -1,73 +1,68 @@
 package com.example.utatracker;
 
-import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.Console;
 import java.util.ArrayList;
 
-public class AlarmAdapter extends ArrayAdapter<Alarm> {
-    public AlarmAdapter(@NonNull Activity context, ArrayList<Alarm> alarms) {
-        super(context, 0, alarms);
+class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
+    public ArrayList<Alarm> alarms;
+
+    public class AlarmViewHolder extends RecyclerView.ViewHolder {
+        private TextView titleText, subtitleText, mLine, mStartStation, mEndStation, mDirection, mEnabled;
+        private ImageView trainIcon;
+
+        public AlarmViewHolder(View view) {
+            super(view);
+            titleText = view.findViewById(R.id.recycle_title);
+            subtitleText = view.findViewById(R.id.recycle_date_time);
+            trainIcon = view.findViewById(R.id.train_icon);
+        }
+    }
+
+    public AlarmAdapter(ArrayList<Alarm> alarms) {
+        this.alarms = alarms;
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
-        Alarm alarm = getItem(position);
+    public AlarmViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.train_alarm_item, parent, false);
 
-        if(view == null){
-            view = LayoutInflater.from(getContext()).inflate(R.layout.train_alarm_item, parent, false);
-        }
+        return new AlarmViewHolder(itemView);
+    }
 
-        TextView titleText = view.findViewById(R.id.recycle_title);
-        TextView subtitleText = view.findViewById(R.id.recycle_date_time);
-        ImageView trainIcon = view.findViewById(R.id.train_icon);
-//        Switch enabled = view.findViewById(R.id.enabledSwitch);
-
-        titleText.setText(alarm.mStartStation);
-        subtitleText.setText(alarm.mDate + " " + alarm.mTime);
-        trainIcon.setImageResource(R.drawable.ic_tram_black_24dp);
-
-//        enabled.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (isChecked) {
-//                    Log.d("switch", "CHECKED");
-//                } else {
-//                    Log.i("switch", "UNCHECKED");
-//                }
-//
-//            }
-//        });
-
+    @Override
+    public void onBindViewHolder(AlarmViewHolder holder, int position) {
+        Alarm alarm = alarms.get(position);
+        holder.titleText.setText(alarm.mStartStation);
+        holder.subtitleText.setText(alarm.mDate + " " + alarm.mTime);
+        holder.trainIcon.setImageResource(R.drawable.ic_tram_black_24dp);
 
         if(alarm.mLine.equals("Red"))
-            trainIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.redLine));
+            holder.trainIcon.setColorFilter(ContextCompat.getColor(holder.trainIcon.getContext(), R.color.redLine));
         else if(alarm.mLine.equals("Green"))
-            trainIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.greenLine));
+            holder.trainIcon.setColorFilter(ContextCompat.getColor(holder.trainIcon.getContext(), R.color.greenLine));
         else if(alarm.mLine.equals("Blue"))
-            trainIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.blueLine));
+            holder.trainIcon.setColorFilter(ContextCompat.getColor(holder.trainIcon.getContext(), R.color.blueLine));
         else if(alarm.mLine.equals("S-Line"))
-            trainIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.silverLine));
+            holder.trainIcon.setColorFilter(ContextCompat.getColor(holder.trainIcon.getContext(), R.color.silverLine));
         else if(alarm.mLine.equals("Front Runner")) {
-            trainIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.black));
-            trainIcon.setImageResource(R.drawable.ic_train_black_24dp);
+            holder.trainIcon.setColorFilter(ContextCompat.getColor(holder.trainIcon.getContext(), R.color.black));
+            holder.trainIcon.setImageResource(R.drawable.ic_train_black_24dp);
         }
         else
-            trainIcon.setColorFilter(ContextCompat.getColor(getContext(), R.color.black));
+            holder.trainIcon.setColorFilter(ContextCompat.getColor(holder.trainIcon.getContext(), R.color.black));
+    }
 
-        return view;
-    };
+    @Override
+    public int getItemCount() {
+        return alarms.size();
+    }
 }

@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.NotificationCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -12,6 +15,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -39,6 +43,8 @@ import java.util.Set;
 public class HomeActivity extends AppCompatActivity {
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
     public static final String DEFAULT_ID = "default";
+    private AlarmAdapter mAdapter;
+    Swipe swipe = null;
     ListView alarmView;
     FloatingActionButton fab;
     ArrayList<Alarm> alarms;
@@ -68,29 +74,38 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         if (alarms != null && alarms.size() != 0) {
-            final AlarmAdapter adapter = new AlarmAdapter(this, alarms);
-            alarmView = (ListView) findViewById(R.id.list);
-            alarmView.setAdapter(adapter);
+            mAdapter = new AlarmAdapter(alarms);
 
-            alarmView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+
+            recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+            recyclerView.setAdapter(mAdapter);
+
+            swipe = new Swipe(new SwipeActions() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (deleteEnabled) {
-                        // Delete alarm
-                        alarms.remove(position);
-                        adapter.notifyDataSetChanged();
-                        SharedPreferences.Editor editor = sharedPref.edit();
-                        Set<String> set = new HashSet<>();
-                        for (Alarm a : alarms)
-                            set.add(a.toString());
-                        editor.putStringSet("alarms", set);
-                        editor.apply();
-                    }
-                    else {
-                        // Edit alarm
-                    }
+                public void onRightClicked(int position) {
+                    mAdapter.alarms.remove(position);
+                    mAdapter.notifyItemRemoved(position);
+                    mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    Set<String> set = new HashSet<>();
+                    for (Alarm a : alarms)
+                        set.add(a.toString());
+                    editor.putStringSet("alarms", set);
+                    editor.apply();
                 }
             });
+
+            ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipe);
+            itemTouchhelper.attachToRecyclerView(recyclerView);
+
+            recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+                @Override
+                public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+                    swipe.onDraw(c);
+                }
+            });
+
         }
 
 
@@ -147,8 +162,6 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-
-    
     private void scheduleNotification(Notification notification, int delay) {
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
         notificationIntent.putExtra(NotificationPublisher.CHANNEL_ID , 1 ) ;
@@ -170,4 +183,5 @@ public class HomeActivity extends AppCompatActivity {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         return builder.build();
     }
+
 }
