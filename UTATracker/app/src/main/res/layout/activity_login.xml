@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:padding="16dp"
@@ -28,11 +32,12 @@
         android:id="@+id/loginUTALogo"
         android:layout_width="200dp"
         android:layout_height="50dp"
-        android:layout_marginTop="64dp"
+        android:layout_margin="34dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/loginTitleText"
         app:srcCompat="@drawable/uta_logo" />
 
     <TextView
@@ -44,7 +49,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginUTALogo" />
+        app:layout_constraintTop_toBottomOf="@+id/loginUTALogo"
+        app:layout_constraintBottom_toTopOf="@id/loginEmailInput"/>
 
     <ProgressBar
         android:id="@+id/loginProgressBar"
@@ -61,12 +67,14 @@
         android:id="@+id/loginRegisterUserText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:layout_marginBottom="16dp"
         android:text="Create an Account"
         app:layout_constraintBottom_toTopOf="@+id/loginForgotPasswordText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginLoginBtn"/>
 
     <EditText
         android:id="@+id/loginPasswordInput"
@@ -80,17 +88,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginEmailInput"
+        app:layout_constraintBottom_toTopOf="@id/loginLoginBtn"
         tools:text="@string/prompt_password" />
 
     <TextView
         android:id="@+id/loginForgotPasswordText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="32dp"
         android:clickable="true"
         android:text="Forgot your password?"
         app:layout_constraintBottom_toBottomOf="parent"
-
+        app:layout_constraintTop_toBottomOf="@id/loginRegisterUserText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -105,7 +114,8 @@
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/loginTitleText" />
+        app:layout_constraintTop_toBottomOf="@+id/loginTitleText"
+        app:layout_constraintBottom_toTopOf="@id/loginPasswordInput"/>
 
     <Button
         android:id="@+id/loginLoginBtn"
@@ -121,3 +131,4 @@
         app:layout_constraintTop_toBottomOf="@+id/loginPasswordInput" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

@@ -120,10 +120,6 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.action_5 :
-//
-//                scheduleNotification(getNotification( "5 second delay" ) , 5000 ) ;
-//                return true;
             case R.id.clearPreferences:
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.clear();
