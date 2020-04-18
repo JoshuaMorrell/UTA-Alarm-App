@@ -82,7 +82,7 @@ public class AddAlarmActivity extends AppCompatActivity {
     private int alarmHour;
     private int alarmMinute;
     private List<MaterialDayPicker.Weekday> alarmDates;
-    private List<UTATraxXMLParser.MonitoredVehicleByRoute> listOfTraxTrains;
+    public List<UTATraxXMLParser.MonitoredVehicleByRoute> listOfTraxTrains;
     String str = "http://api.rideuta.com/SIRI/SIRI.svc/VehicleMonitor/ByRoute?route=703&onwardcalls=false&usertoken=UUB2O040NV0";
 
     MaterialDayPicker dayPicker;
@@ -311,8 +311,39 @@ public class AddAlarmActivity extends AppCompatActivity {
     }
     private void scheduleNotification(int hour, int minute, List<MaterialDayPicker.Weekday> dates,String line) {
         Calendar calendar = Calendar.getInstance();
+        String traxRouteID;
         int dow = 0;
-        asyncTask.execute(str);
+
+        switch(line)
+        {
+            case "Red":
+                traxRouteID = "703";
+                break;
+            case "Blue":
+                traxRouteID = "701";
+                break;
+            case "Green":
+                traxRouteID = "704";
+                break;
+            case "S-Line":
+                traxRouteID = "720";
+                break;
+            case "FrontRunner":
+                traxRouteID = "750";
+                break;
+            default:
+                traxRouteID = "0"; //shouldnt happen
+                break;
+
+        }
+
+        //String url = "http://api.rideuta.com/SIRI/SIRI.svc/StopMonitor?stopid=133054&minutesout=30&onwardcalls=false&filterroute=&usertoken=UUB2O040NV0";
+        String url = "http://api.rideuta.com/SIRI/SIRI.svc/VehicleMonitor/ByRoute?route="+traxRouteID+"&onwardcalls=false&usertoken=UUB2O040NV0";
+        //Get APITraxInfo
+        asyncTask.execute(url);
+
+
+
 
         for(MaterialDayPicker.Weekday day : dates) {
             switch(day.toString())
@@ -346,12 +377,18 @@ public class AddAlarmActivity extends AppCompatActivity {
             calendar.set(Calendar.MINUTE, minute);
         }
 
+        for(UTATraxXMLParser.MonitoredVehicleByRoute t : listOfTraxTrains)
+        {
+
+        }
+
         Bundle alarmInfo = new Bundle();
         String min = Integer.toString(minute);
         if(minute < 10) {
             min = "0" + min;
         }
         alarmInfo.putString("alarmTime", hour + ":" + min);
+
 
         Intent intent = new Intent(getApplicationContext(), NotificationReceiver.class);
         intent.putExtras(alarmInfo);
@@ -600,7 +637,7 @@ public class AddAlarmActivity extends AppCompatActivity {
      * Input String: URL
      * Output List: Returns a list of the requested API information
      */
-    private class DownloadXmlTask extends AsyncTask<String, Void, List> {
+    private class DownloadXmlTask extends AsyncTask<String, Void, List<UTATraxXMLParser.MonitoredVehicleByRoute>> {
 
         @Override
         protected List doInBackground(String... urls) {
@@ -617,7 +654,7 @@ public class AddAlarmActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(List result) {
+        protected void onPostExecute(List<UTATraxXMLParser.MonitoredVehicleByRoute> result) {
             listOfTraxTrains = result;
         }
 

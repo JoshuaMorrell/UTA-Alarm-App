@@ -39,6 +39,33 @@
     <string name="blueline_KimballsLane">"Kimballs Lane Station"</string>
     <string name="directionOfTravel_blueline_Draper">"Draper Town Center"</string>
 
+    <string name="blueline_SaltLakeCt_STOPID">""</string>
+    <string name="blueline_OldGreektown_STOPID">""</string>
+    <string name="blueline_Planetarium_STOPID">""</string>
+    <string name="blueline_Arena_STOPID">""</string>
+    <string name="blueline_TempleSquare_STOPID">""</string>
+    <string name="blueline_CityCenter_STOPID">""</string>
+    <string name="blueline_GallivanPlaza_STOPID">""</string>
+    <string name="blueline_Courthouse_STOPID">""</string>
+    <string name="blueline_900South_STOPID">""</string>
+    <string name="blueline_Ballpark_STOPID">""</string>
+    <string name="blueline_CentralPointe_STOPID">""</string>
+    <string name="blueline_Millcreek_STOPID">""</string>
+    <string name="blueline_Meadowbrook_STOPID">""</string>
+    <string name="blueline_MurrayNorth_STOPID">""</string>
+    <string name="blueline_MurrayCentral_STOPID">""</string>
+    <string name="blueline_FashionPlaceWest_STOPID">""</string>
+    <string name="blueline_MidvaleFortUnion_STOPID">""</string>
+    <string name="blueline_MidvaleCenter_STOPID">""</string>
+    <string name="blueline_HistoricSandy_STOPID">""</string>
+    <string name="blueline_SandyExpo_STOPID">""</string>
+    <string name="blueline_SandyCivicCenter_STOPID">""</string>
+    <string name="blueline_CrescentView_STOPID">""</string>
+    <string name="blueline_KimballsLane_STOPID">""</string>
+    <string name="blueline_Draper_STOPID">""</string>
+
+
+
     <!-- Red Line Stops (order is sequential and should match stop order from direction of travel)-->
     <string name="directionofTravel_redline_Medical">"U. Of U. Medical Center Station"</string>
     <string name="redline_FortDouglas">"Fort Douglas Station"</string>
@@ -66,6 +93,32 @@
     <string name="redline_SouthJordanParkway">"South Jordan Parkway Station"</string>
     <string name="directionofTravel_redline_Daybreak">"Daybreak Parkway Station"</string>
 
+    <string name="redline_Medical_STOPID">""</string>
+    <string name="redline_FortDouglas_STOPID">""</string>
+    <string name="redline_SouthCampus_STOPID">""</string>
+    <string name="redline_Stadium_STOPID">""</string>
+    <string name="redline_900East_STOPID">""</string>
+    <string name="redline_Trolley_STOPID">""</string>
+    <string name="redline_Library_STOPID">""</string>
+    <string name="redline_Courthouse_STOPID">""</string>
+    <string name="redline_900South_STOPID">""</string>
+    <string name="redline_Ballpark_STOPID">""</string>
+    <string name="redline_CentralPointe_STOPID">""</string>
+    <string name="redline_Millcreek_STOPID">""</string>
+    <string name="redline_Meadowbrook_STOPID">""</string>
+    <string name="redline_MurrayNorth_STOPID">""</string>
+    <string name="redline_MurrayCentral_STOPID">""</string>
+    <string name="redline_FashionPlaceWest_STOPID">""</string>
+    <string name="redline_BinghamJunction_STOPID">""</string>
+    <string name="redline_HistoricGardner_STOPID">""</string>
+    <string name="redline_WestJordanCityCenter_STOPID">""</string>
+    <string name="redline_2700WSugarFactoryRd_STOPID">""</string>
+    <string name="redline_JordanValley_STOPID">""</string>
+    <string name="redline_4800WOldBinghamHwy_STOPID">""</string>
+    <string name="redline_5600WOldBinghamHwy_STOPID">""</string>
+    <string name="redline_SouthJordanParkway_STOPID">""</string>
+    <string name="redline_Daybreak_STOPID">""</string>
+
 
     <!-- Green Line Stops (order is sequential and should match stop order to direction of travel)-->
     <string name="directionofTravel_greenline_WestValley">"West Valley Central Station"</string>
@@ -87,6 +140,25 @@
     <string name="greenline_1940WNorthTemple">"1940 W North Temple Station"</string>
     <string name="directionofTravel_greenline_Airport">"Airport Station"</string>
 
+    <string name="greenline_WestValley_STOPID">""</string>
+    <string name="greenline_DeckerLake_STOPID">""</string>
+    <string name="greenline_RedwoodJunction_STOPID">""</string>
+    <string name="greenline_RiverTrail_STOPID">""</string>
+    <string name="greenline_CentralPointe_STOPID">""</string>
+    <string name="greenline_Ballpark_STOPID">""</string>
+    <string name="greenline_900South_STOPID">""</string>
+    <string name="greenline_Courthouse_STOPID">""</string>
+    <string name="greenline_GallivanPlaza_STOPID">""</string>
+    <string name="greenline_CityCenter_STOPID">""</string>
+    <string name="greenline_TempleSquare_STOPID">""</string>
+    <string name="greenline_Arena_STOPID">""</string>
+    <string name="greenline_NorthTempleBridge_STOPID">""</string>
+    <string name="greenline_JacksonEuclid_STOPID">""</string>
+    <string name="greenline_Fairpark_STOPID">""</string>
+    <string name="greenline_Power_STOPID">""</string>
+    <string name="greenline_1940WNorthTemple_STOPID">""</string>
+    <string name="greenline_Airport_STOPID">""</string>
+
     <!-- S-Line Stops (order is sequential and should match stop order to direction of travel)-->
     <string name="directionofTravel_sline_Fairmont">"Fairmont Station"</string>
     <string name="sline_Sugarmont">"Sugarmont Station"</string>
@@ -95,6 +167,14 @@
     <string name="sline_300East">"300 East Station"</string>
     <string name="sline_SouthSaltLakeCity">"South Salt Lake City Station"</string>
     <string name="directionofTravel_sline_CentralPointe">"Central Pointe Station"</string>
+
+    <string name="sline_Fairmont_STOPID">""</string>
+    <string name="sline_Sugarmont_STOPID">""</string>
+    <string name="sline_700East_STOPID">""</string>
+    <string name="sline_500East_STOPID">""</string>
+    <string name="sline_300East_STOPID">""</string>
+    <string name="sline_SouthSaltLakeCity_STOPID">""</string>
+    <string name="sline_CentralPointe_STOPID">""</string>
 
 
     <!-- Front Runner Stops (order is sequential and should match stop order to direction of travel)-->

@@ -265,70 +265,70 @@ public class UTATraxXMLParser {
         private String getVisitNumber(){return this.visitNumber;}
         private void setVisitNumber(String visitNumber){this.visitNumber = visitNumber;}
 
-        private String getVehicleAtStop(){return this.vehicleAtStop;}
-        private void setVehicleAtStop(String vehicleAtStop){this.vehicleAtStop = vehicleAtStop;}
+         String getVehicleAtStop(){return this.vehicleAtStop;}
+         void setVehicleAtStop(String vehicleAtStop){this.vehicleAtStop = vehicleAtStop;}
 
-        private String getResponseTimestamp(){return this.responseTimestamp;}
-        private void setResponseTimestamp(String responseTimestamp){this.responseTimestamp = responseTimestamp;}
+         String getResponseTimestamp(){return this.responseTimestamp;}
+         void setResponseTimestamp(String responseTimestamp){this.responseTimestamp = responseTimestamp;}
 
-        private String getValidUntil(){return this.validUntil;}
-        private void setValidUntil(String validUntil){this.validUntil = validUntil;}
+         String getValidUntil(){return this.validUntil;}
+         void setValidUntil(String validUntil){this.validUntil = validUntil;}
 
-        private String getRecordedAtTime(){return this.recordedAtTime;}
-        private void setRecordedAtTime(String recordedAtTime){this.recordedAtTime = recordedAtTime;}
+         String getRecordedAtTime(){return this.recordedAtTime;}
+         void setRecordedAtTime(String recordedAtTime){this.recordedAtTime = recordedAtTime;}
 
-        private String getLineRef() {return this.lineRef;}
-        private void setLineRef(String lineRef) {this.lineRef = lineRef;}
+         String getLineRef() {return this.lineRef;}
+         void setLineRef(String lineRef) {this.lineRef = lineRef;}
 
-        private String getDirectionRef(){return this.directionRef;}
-        private void setDirectionRef(String directionRef){this.directionRef = directionRef;}
+         String getDirectionRef(){return this.directionRef;}
+         void setDirectionRef(String directionRef){this.directionRef = directionRef;}
 
-        private String getPublishedLineName(){return this.publishedLineName;}
-        private void setPublishedLineName(String publishedLineName){this.publishedLineName = publishedLineName;}
+         String getPublishedLineName(){return this.publishedLineName;}
+         void setPublishedLineName(String publishedLineName){this.publishedLineName = publishedLineName;}
 
-        private String getDataFrameRef(){return this.dataFrameRef;}
-        private void setDataFrameRef(String dataFrameRef) {this.dataFrameRef = dataFrameRef;}
+         String getDataFrameRef(){return this.dataFrameRef;}
+         void setDataFrameRef(String dataFrameRef) {this.dataFrameRef = dataFrameRef;}
 
-        private String getDatedVehicleJourneyRef(){return this.datedVehicleJourneyRef;}
-        private void setDatedVehicleJourneyRef(String datedVehicleJourneyRef){this.datedVehicleJourneyRef = datedVehicleJourneyRef;}
+         String getDatedVehicleJourneyRef(){return this.datedVehicleJourneyRef;}
+         void setDatedVehicleJourneyRef(String datedVehicleJourneyRef){this.datedVehicleJourneyRef = datedVehicleJourneyRef;}
 
-        private String getOriginRef(){return this.originRef;}
-        private void setOriginRef(String originRef){this.originRef = originRef;}
+         String getOriginRef(){return this.originRef;}
+        void setOriginRef(String originRef){this.originRef = originRef;}
 
-        private String getDestinationRef(){return this.destinationRef;}
-        private void setDestinationRef(String destinationRef){this.destinationRef = destinationRef;}
+         String getDestinationRef(){return this.destinationRef;}
+         void setDestinationRef(String destinationRef){this.destinationRef = destinationRef;}
 
-        private String getMonitored(){return this.monitored;}
-        private void setMonitored(String monitored){this.monitored = monitored;}
+         String getMonitored(){return this.monitored;}
+         void setMonitored(String monitored){this.monitored = monitored;}
 
-        private String getLongitude(){return this.longitude;}
-        private void setLongitude(String longitude){this.longitude = longitude;}
+         String getLongitude(){return this.longitude;}
+         void setLongitude(String longitude){this.longitude = longitude;}
 
-        private String getLatitude(){return this.latitude;}
-        private void setLatitude(String latitude){this.latitude = latitude;}
+         String getLatitude(){return this.latitude;}
+         void setLatitude(String latitude){this.latitude = latitude;}
 
-        private String getProgressRate(){return this.progressRate;}
-        private void setProgressRate(String progressRate){this.progressRate = progressRate;}
+         String getProgressRate(){return this.progressRate;}
+         void setProgressRate(String progressRate){this.progressRate = progressRate;}
 
-        private String getCourseOfJourneyRef(){return this.courseOfJourneyRef;}
-        private void setCourseOfJourneyRef(String courseOfJourneyRef){this.courseOfJourneyRef = courseOfJourneyRef;}
+         String getCourseOfJourneyRef(){return this.courseOfJourneyRef;}
+         void setCourseOfJourneyRef(String courseOfJourneyRef){this.courseOfJourneyRef = courseOfJourneyRef;}
 
-        private String getVehicleRef(){return this.vehicleRef;}
-        private void setVehicleRef(String vehicleRef){this.vehicleRef = vehicleRef;}
+         String getVehicleRef(){return this.vehicleRef;}
+         void setVehicleRef(String vehicleRef){this.vehicleRef = vehicleRef;}
 
-        private String getLastGPSFix(){return this.lastGPSFix;}
-        private void setLastGPSFix(String lastGPSFix){this.lastGPSFix = lastGPSFix;}
+         String getLastGPSFix(){return this.lastGPSFix;}
+         void setLastGPSFix(String lastGPSFix){this.lastGPSFix = lastGPSFix;}
 
-        private String getScheduled(){return this.scheduled;}
-        private void setScheduled(String scheduled){this.scheduled = scheduled;}
+         String getScheduled(){return this.scheduled;}
+         void setScheduled(String scheduled){this.scheduled = scheduled;}
 
-        private String getBearing(){return this.bearing;}
-        private void setBearing(String bearing){this.bearing = bearing;}
+         String getBearing(){return this.bearing;}
+         void setBearing(String bearing){this.bearing = bearing;}
 
-        private String getSpeed(){return this.speed;}
-        private void setSpeed(String speed){this.speed = speed;}
+        String getSpeed(){return this.speed;}
+         void setSpeed(String speed){this.speed = speed;}
 
-        private String getDestinationName() {return this.destinationName;}
-        private void setDestinationName(String destinationName){this.destinationName = destinationName;}
+         String getDestinationName() {return this.destinationName;}
+         void setDestinationName(String destinationName){this.destinationName = destinationName;}
     }
 }
