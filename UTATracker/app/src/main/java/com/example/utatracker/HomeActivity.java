@@ -1,10 +1,12 @@
 package com.example.utatracker;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.app.NotificationCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlarmManager;
 import android.app.Notification;
@@ -12,8 +14,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
+import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -22,28 +23,21 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.CompoundButton;
-import android.widget.ListView;
-import android.widget.Switch;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
 public class HomeActivity extends AppCompatActivity {
     public static final String NOTIFICATION_CHANNEL_ID = "10001" ;
-    public static final String DEFAULT_ID = "default";
-    ListView alarmView;
+    private AlarmAdapter mAdapter;
+    Swipe swipe = null;
     FloatingActionButton fab;
     ArrayList<Alarm> alarms;
     SharedPreferences sharedPref;
-    Switch enabled;
     boolean deleteEnabled;
 
     @Override
@@ -52,9 +46,9 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         deleteEnabled = false;
 
-        sharedPref = sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        alarms = new ArrayList<Alarm>();
-        for(String alarm: new HashSet<String>(sharedPref.getStringSet("alarms", new HashSet<String>()))){
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        alarms = new ArrayList<>();
+        for(String alarm: new HashSet<>(sharedPref.getStringSet("alarms", new HashSet<String>()))){
             alarms.add(Alarm.fromString(alarm));
         }
 
@@ -68,33 +62,40 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         if (alarms != null && alarms.size() != 0) {
-            final AlarmAdapter adapter = new AlarmAdapter(this, alarms);
-            alarmView = (ListView) findViewById(R.id.list);
-            alarmView.setAdapter(adapter);
+            mAdapter = new AlarmAdapter(alarms);
+            RecyclerView recyclerView = findViewById(R.id.recyclerView);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+            recyclerView.setAdapter(mAdapter);
 
-            alarmView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            swipe = new Swipe(new SwipeActions() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    if (deleteEnabled) {
-                        // Delete alarm
-                        alarms.remove(position);
-                        adapter.notifyDataSetChanged();
-                        SharedPreferences.Editor editor = sharedPref.edit();
-                        Set<String> set = new HashSet<>();
-                        for (Alarm a : alarms)
-                            set.add(a.toString());
-                        editor.putStringSet("alarms", set);
-                        editor.apply();
-                    }
-                    else {
-                        // Edit alarm
-                    }
+                public void onRightClicked(int position) {
+                    mAdapter.alarms.remove(position);
+                    mAdapter.notifyItemRemoved(position);
+                    mAdapter.notifyItemRangeChanged(position, mAdapter.getItemCount());
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    Set<String> set = new HashSet<>();
+                    for (Alarm a : alarms)
+                        set.add(a.toString());
+                    editor.putStringSet("alarms", set);
+                    editor.apply();
+                }
+
+                @Override
+                public void onLeftClicked(int position) {
+                    super.onLeftClicked(position);
+                }
+            });
+
+            ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipe);
+            itemTouchhelper.attachToRecyclerView(recyclerView);
+            recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+                @Override
+                public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                    swipe.onDraw(c);
                 }
             });
         }
-
-
-
 
     }
 
@@ -108,28 +109,10 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.action_5 :
-//
-//                scheduleNotification(getNotification( "5 second delay" ) , 5000 ) ;
-//                return true;
-            case R.id.setDelete:
-                Drawable icon = getDrawable(R.drawable.ic_delete_black_24dp);
-                if (deleteEnabled) {
-                    deleteEnabled = false;
-                    icon.setTint(Color.BLACK);
-                    item.setIcon(icon);
-                }
-                else {
-                    deleteEnabled = true;
-                    icon.setTint(getResources().getColor(R.color.colorAccent));
-                    item.setIcon(icon);
-                }
-
-                return true;
             case R.id.clearPreferences:
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.clear();
-                editor.commit();
+                editor.apply();
                 startActivity(new Intent(HomeActivity.this, HomeActivity.class));
                 finish();
                 return true;
@@ -147,15 +130,13 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-
-    
     private void scheduleNotification(Notification notification, int delay) {
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
         notificationIntent.putExtra(NotificationPublisher.CHANNEL_ID , 1 ) ;
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION , notification) ;
         PendingIntent pendingIntent = PendingIntent.getBroadcast( this, 1 , notificationIntent , PendingIntent.FLAG_UPDATE_CURRENT ) ;
         long futureInMillis = SystemClock.elapsedRealtime() + delay ;
-        Log.d("notify", "Future in millis: " + String.valueOf(futureInMillis));
+        Log.d("notify", "Future in millis: " + futureInMillis);
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE) ;
         assert alarmManager != null;
         alarmManager.set(AlarmManager. ELAPSED_REALTIME_WAKEUP , futureInMillis , pendingIntent) ;
@@ -170,4 +151,5 @@ public class HomeActivity extends AppCompatActivity {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
         return builder.build();
     }
+
 }
