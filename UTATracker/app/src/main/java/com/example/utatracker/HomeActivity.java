@@ -94,7 +94,6 @@ public class HomeActivity extends AppCompatActivity {
                     Intent intent = new Intent(getBaseContext(), AddAlarmActivity.class);
                     intent.putExtra("EXTRA_ALARM_ID", alarms.get(position).id);
                     startActivity(intent);
-                    finish();
                 }
             });
 
