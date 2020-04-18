@@ -49,6 +49,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -73,9 +74,6 @@ public class AddAlarmActivity extends AppCompatActivity {
     RelativeLayout dateLayout, timeLayout, startLayout, endLayout, lineLayout,
             directionLayout, alertLayout;
     TimePickerDialog timePicker;
-
-
-//    Calendar mCalendar;
 
     private String mDate;
     private String mTime;
@@ -132,6 +130,7 @@ public class AddAlarmActivity extends AppCompatActivity {
         endPicker = findViewById(R.id.endPicker);
         directionPicker = findViewById(R.id.directionPicker);
         alertPicker = findViewById(R.id.alertPicker);
+        disablePickerKeyboards();
 
         startLayout = findViewById(R.id.start_location);
         endLayout = findViewById(R.id.end_location);
@@ -143,8 +142,6 @@ public class AddAlarmActivity extends AppCompatActivity {
         directionLayout = findViewById(R.id.set_direction);
         alertExpandable = findViewById(R.id.alertExpandView);
         alertLayout = findViewById(R.id.alert_time);
-
-
 
         mDateText = findViewById(R.id.date_text);
         mTimeText = findViewById(R.id.time_text);
@@ -167,8 +164,6 @@ public class AddAlarmActivity extends AppCompatActivity {
         dayPicker.setDaySelectionChangedListener(new MaterialDayPicker.DaySelectionChangedListener() {
             @Override
             public void onDaySelectionChanged(@NonNull List<MaterialDayPicker.Weekday> selectedDays) {
-            // ~~~~~~~~~~~~~~~~~~~~~~ selectedDays contains the days selected from day picker ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-            Log.d("hello",String.format("[DaySelectionChangedListener]%s", selectedDays.toString()));
             if(selectedDays.size() > 0){
                 alarmDates = selectedDays;
                 mDate = selectedDays.toString();
@@ -187,12 +182,19 @@ public class AddAlarmActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
             final Calendar cal = Calendar.getInstance();
+            int hour = cal.get(Calendar.HOUR_OF_DAY);
+            int minute = cal.get(Calendar.MINUTE);
+
+            if (edit) {
+                List<String> time = new ArrayList<>(Arrays.asList(mTime.split(":")));
+                hour = Integer.parseInt(time.get(0));
+                minute = Integer.parseInt(time.get(1));
+            }
+
             timePicker = new TimePickerDialog(AddAlarmActivity.this, R.style.TimePickerTheme,
                     new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    // ~~~~~~~~~~~~~~~~~~~~~~~~~~THIS IS HOW YOU GET THE HOUR (hourOfDay) AND MINUTE (minute) WHEN SELECTED~~~~~~~~~~~~~~~`~
-                    Log.d("timePicker", hourOfDay + ":" + minute);
                     if(minute < 10)
                         mTime = hourOfDay + ":0" + minute;
                     else
@@ -201,7 +203,7 @@ public class AddAlarmActivity extends AppCompatActivity {
                     alarmMinute = minute;
                     mTimeText.setText(mTime);
                 }
-            },cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
+            },hour, minute, true);
 
             timePicker.show();
             }
@@ -255,6 +257,7 @@ public class AddAlarmActivity extends AppCompatActivity {
         lineLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                lineText.setText(selectedLine);
                 if (lineExpandable.getVisibility() == View.GONE) {
                     TransitionManager.beginDelayedTransition(lineLayout, new AutoTransition());
                     lineExpandable.setVisibility(View.VISIBLE);
@@ -311,6 +314,7 @@ public class AddAlarmActivity extends AppCompatActivity {
         alertLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                alertText.setText(selectedNotifyTime);
                 if (alertExpandable.getVisibility() == View.GONE) {
                     TransitionManager.beginDelayedTransition(alertLayout, new AutoTransition());
                     alertExpandable.setVisibility(View.VISIBLE);
@@ -331,7 +335,31 @@ public class AddAlarmActivity extends AppCompatActivity {
             Set<String> alarms = new HashSet<>(sharedPref.getStringSet("alarms", new HashSet<String>()));
             for(String a: alarms){
                 if(Alarm.fromString(a).id == alarm_id){
-//                    lineText.setText(Alarm.fromString(a).mLine);
+                    // Date
+                    mDate = Alarm.fromString(a).mDate;
+                    mDateText.setText(mDate);
+                    dayPicker.setSelectedDays(getWeekdaySelections(mDate));
+
+                    // Time
+                    mTime = Alarm.fromString(a).mTime;
+                    mTimeText.setText(mTime);
+
+                    // Line
+                    selectedLine = Alarm.fromString(a).mLine;
+                    lineText.setText(selectedLine);
+
+                    // Start Station
+                    selectedStartLoc = Alarm.fromString(a).mStartStation;
+                    startText.setText(selectedStartLoc);
+
+                    // End Station
+                    selectedEndLoc = Alarm.fromString(a).mEndStation;
+                    endText.setText(selectedEndLoc);
+
+                    // Direction
+                    selectedDirection = Alarm.fromString(a).mDirection;
+                    directionText.setText(selectedDirection);
+
                 }
             }
             return true;
@@ -391,6 +419,9 @@ public class AddAlarmActivity extends AppCompatActivity {
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
+    /**
+     * Sets up the picker for line
+     */
     private void setUpLinePicker() {
         linePicker.setMinValue(0);
         linePicker.setMaxValue(lines.length - 1);
@@ -414,6 +445,7 @@ public class AddAlarmActivity extends AppCompatActivity {
                 startPicker = new NumberPicker(getApplicationContext());
                 endPicker = new NumberPicker(getApplicationContext());
                 directionPicker = new NumberPicker(getApplicationContext());
+                disablePickerKeyboards();
 
                 setUpSelectedLinePicker();
                 setUpDirectionPicker();
@@ -593,6 +625,56 @@ public class AddAlarmActivity extends AppCompatActivity {
         }
 
         return stations;
+    }
+
+    /**
+     * Given string of dates, convert to a list of Weekday values
+     * @param alarmDates
+     * @return
+     */
+    private List<MaterialDayPicker.Weekday> getWeekdaySelections(String alarmDates) {
+        List<MaterialDayPicker.Weekday> days = new ArrayList<>();
+        alarmDates = alarmDates.substring(1, alarmDates.length()-1);
+        alarmDates = alarmDates.replaceAll(" ", "");
+        List<String> temp = new ArrayList<String>(Arrays.asList(alarmDates.split(",")));
+
+        for(String s : temp) {
+            switch (s) {
+                case "SUNDAY":
+                    days.add(MaterialDayPicker.Weekday.SUNDAY);
+                    break;
+                case "MONDAY":
+                    days.add(MaterialDayPicker.Weekday.MONDAY);
+                    break;
+                case "TUESDAY":
+                    days.add(MaterialDayPicker.Weekday.TUESDAY);
+                    break;
+                case "WEDNESDAY":
+                    days.add(MaterialDayPicker.Weekday.WEDNESDAY);
+                    break;
+                case "THURSDAY":
+                    days.add(MaterialDayPicker.Weekday.THURSDAY);
+                    break;
+                case "FRIDAY":
+                    days.add(MaterialDayPicker.Weekday.FRIDAY);
+                    break;
+                case "SATURDAY":
+                    days.add(MaterialDayPicker.Weekday.SATURDAY);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + s);
+            }
+        }
+        return days;
+    }
+
+    private void disablePickerKeyboards(){
+        // Disable keyboards on pickers
+        linePicker.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        startPicker.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        endPicker.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        directionPicker.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        alertPicker.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
     }
 
 
